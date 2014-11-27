@@ -29,6 +29,8 @@ public class Sender extends HttpServlet {
                           javax.servlet.http.HttpServletResponse response)
             throws javax.servlet.ServletException, IOException {
 
+        request.setCharacterEncoding("UTF-8");
+
         // Получение донных из Form.jsp
         String recipient = request.getParameter("recipient");
         String subject = request.getParameter("subject");
@@ -40,7 +42,7 @@ public class Sender extends HttpServlet {
         try {
             Util.sendEmail(host, port, user, pass,
                     recipient, subject, content);
-            resultMessage = "Письмо отправлено!  :)";
+            resultMessage = "Письмо отправлено!  > > >  " + recipient + " : : " + subject + " : : " + content;
         } catch (Exception ex) {
             ex.printStackTrace();
             resultMessage = "Что-то пошло не так...   " + ex.getMessage();
