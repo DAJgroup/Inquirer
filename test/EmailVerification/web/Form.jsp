@@ -7,7 +7,7 @@
 <body>
 <form action="Sender" method="post">
     <table border="0" width="35%" align="center">
-        <caption><h2>Подтверждение е-email.</h2></caption>
+        <caption><h2>Подтверждение e-mail.</h2></caption>
         <tr>
             <td width="50%">E-mail для подтверждения:</td>
             <td><input type="text" name="recipient" size="50"/></td>
