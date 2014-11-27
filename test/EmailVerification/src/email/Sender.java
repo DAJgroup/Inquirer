@@ -46,7 +46,7 @@ public class Sender extends HttpServlet {
         String resultMessage = "";
 
         try {
-            Util.sendEmail(host, port, user, pass,
+            UtilMail.sendEmail(host, port, user, pass,
                     recipient, subject, content);
             resultMessage = "Письмо отправлено!  > > >  " + recipient + " : : " + subject + " : : " + content;
         } catch (Exception ex) {

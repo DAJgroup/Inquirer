@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Properties;
 
 
-public class Util {
+public class UtilMail {
     public static void sendEmail(String host, String port,
                                  final String userName, final String password, String toAddress,
                                  String subject, String message)
