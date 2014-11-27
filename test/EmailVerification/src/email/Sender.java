@@ -4,6 +4,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import java.io.IOException;
+import java.util.zip.CRC32;
 
 
 @WebServlet("/Sender")
@@ -31,10 +32,15 @@ public class Sender extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
-        // Получение донных из Form.jsp
+        // Генерация псевдослучайной строки
+        String str = String.valueOf(System.currentTimeMillis());
+        CRC32 crc = new CRC32();
+        crc.update(str.getBytes());
+        str = Long.toHexString(crc.getValue());
+
         String recipient = request.getParameter("recipient");
-        String subject = request.getParameter("subject");
-        String content = request.getParameter("content");
+        String subject = "E-Mail Verification";
+        String content = "Проверочная строка: " + str.toUpperCase() + "\n";
 
 
         String resultMessage = "";
