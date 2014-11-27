@@ -7,24 +7,16 @@
 <body>
 <form action="Sender" method="post">
     <table border="0" width="35%" align="center">
-        <caption><h2>Форма отправки е-email.</h2></caption>
+        <caption><h2>Подтверждение е-email.</h2></caption>
         <tr>
-            <td width="50%">Адрес получателя:</td>
+            <td width="50%">E-mail для подтверждения:</td>
             <td><input type="text" name="recipient" size="50"/></td>
-        </tr>
-        <tr>
-            <td>Тема:</td>
-            <td><input type="text" name="subject" size="50"/></td>
-        </tr>
-        <tr>
-            <td>Текст:</td>
-            <td><textarea rows="10" cols="39" name="content"></textarea></td>
         </tr>
         <tr>
             <td colspan="2" align="center"><input type="submit" value="Send"/></td>
         </tr>
     </table>
-
 </form>
 </body>
 </html>
+
