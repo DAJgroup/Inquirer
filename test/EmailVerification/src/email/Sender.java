@@ -68,7 +68,7 @@ public class Sender extends HttpServlet {
             resultMessage = "Что-то пошло не так...   " + ex.getMessage();
         } finally {
             request.setAttribute("Message", resultMessage);
-            getServletContext().getRequestDispatcher("/Report.jsp").forward(
+            getServletContext().getRequestDispatcher("/Confirm.jsp").forward(
                     request, response);
         }
     }
