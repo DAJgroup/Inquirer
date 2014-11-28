@@ -2,8 +2,10 @@ package email;
 
 import javax.servlet.ServletContext;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.zip.CRC32;
 
 
@@ -25,7 +27,6 @@ public class Sender extends HttpServlet {
         pass = context.getInitParameter("pass");
     }
 
-
     protected void doPost(javax.servlet.http.HttpServletRequest request,
                           javax.servlet.http.HttpServletResponse response)
             throws javax.servlet.ServletException, IOException {
@@ -42,13 +43,26 @@ public class Sender extends HttpServlet {
         String subject = "E-Mail Verification";
         String content = "Проверочная строка: " + RandString + "\n";
 
+        // Хешируем строку
+        String HashStr = null;
+        try {
+            HashStr = UtilHash.getHash(RandString);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
 
         String resultMessage = "";
 
+        // отправляем e-mail
         try {
             UtilMail.sendEmail(host, port, user, pass,
                     recipient, subject, content);
-            resultMessage = "Письмо отправлено!  > > >  " + recipient + " : : " + subject + " : : " + content;
+
+            // Запись куки в браузер клиенту.
+            Cookie c1 = new Cookie("XString", HashStr);
+            c1.setMaxAge(60);
+            response.addCookie(c1);
+            resultMessage = "Письмо отправлено! <br>" + "Куки установлены! <br>";
         } catch (Exception ex) {
             ex.printStackTrace();
             resultMessage = "Что-то пошло не так...   " + ex.getMessage();
