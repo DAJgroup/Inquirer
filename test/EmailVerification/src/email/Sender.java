@@ -33,14 +33,14 @@ public class Sender extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         // Генерация псевдослучайной строки
-        String str = String.valueOf(System.currentTimeMillis());
+        String RandString = String.valueOf(System.currentTimeMillis());
         CRC32 crc = new CRC32();
-        crc.update(str.getBytes());
-        str = Long.toHexString(crc.getValue());
+        crc.update(RandString.getBytes());
+        RandString = Long.toHexString(crc.getValue()).toUpperCase();
 
         String recipient = request.getParameter("recipient");
         String subject = "E-Mail Verification";
-        String content = "Проверочная строка: " + str.toUpperCase() + "\n";
+        String content = "Проверочная строка: " + RandString + "\n";
 
 
         String resultMessage = "";
