@@ -17,7 +17,7 @@
             <td><input type="text" name="UserPWD" size="25" title="UserPWD"/></td>
         </tr>
         <tr>
-            <td colspan="2" align="center"><input type="submit" value="Вход"/></td>
+            <td colspan="2" align="center"><input type="submit" value="Подтвердить"/></td>
         </tr>
     </table>
 </form>

@@ -77,9 +77,7 @@ public class MailCheckerServlet extends HttpServlet {
 
 
             } else {
-                Result = "Подтверждение адреса e-mail провалилось! <br>\n" +
-                        "— Вернитесь на начальную страницу<br>\n" +
-                        "— Повторите отправку проверочного письма.<br>";
+                Result = "Подтверждение адреса e-mail провалилось! <br>\n";
                 checked = false;
             }
 

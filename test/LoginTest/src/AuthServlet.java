@@ -87,18 +87,14 @@ public class AuthServlet extends HttpServlet {
 
                     LoginMessage += "Успешная авторизация\n<br>\n" +
                             "Куки установленны\n<br>\n<br>\n<br>\n" +
-                            UserLogin + " из групп(ы)  ";
-                    ResultSet rs2;
-                    sql = "SELECT group_id FROM group_entries WHERE user_id ='" + user_id + "'";
+                            UserLogin + " из групп(ы) : <br>\n";
+
+                    sql = "SELECT group_title FROM groups WHERE group_id IN (SELECT group_id FROM group_entries WHERE user_id='" + user_id + "')";
                     rs = st.executeQuery(sql);
                     while (rs.next()) {
-                        String group_id = rs.getString(1);
-                        sql = "SELECT group_title FROM groups WHERE group_id='" + group_id + "'";
-                        rs2 = st.executeQuery(sql);
-                        rs2.next();
-                        LoginMessage += rs2.getString(1) + " ";
+                        LoginMessage +=  rs.getString(1) + "<br>\n";
                     }
-                    LoginMessage += "\n<br>\n";
+                    LoginMessage += "\n<br>\nclient_ip = "+ RemoteIP;
 
                 } else {
                     LoginMessage += "Пароли не совпадают!\n<br>\n";

@@ -11,7 +11,7 @@
   <br/>
 
   <form action="index.jsp">
-    <button type="submit">Вернуться на начальную страницу</button>
+    <button type="submit">Вернуться на главную страницу</button>
   </form>
 </div>
 </body>
