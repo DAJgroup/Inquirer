@@ -112,7 +112,7 @@ public class AuthServlet extends HttpServlet {
         }
 
         request.setAttribute("Message", LoginMessage);
-        getServletContext().getRequestDispatcher("/Report.jsp").forward(
+        getServletContext().getRequestDispatcher("/index.jsp").forward(
                 request, response);
 
     }

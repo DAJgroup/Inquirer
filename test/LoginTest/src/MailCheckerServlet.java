@@ -85,7 +85,7 @@ public class MailCheckerServlet extends HttpServlet {
             Result = "Cookie Устарели либо не были установлены.<br>\n";
         }
         request.setAttribute("Message", Result);
-        getServletContext().getRequestDispatcher("/Report.jsp").forward(
+        getServletContext().getRequestDispatcher("/index.jsp").forward(
                 request, response);
     }
 }

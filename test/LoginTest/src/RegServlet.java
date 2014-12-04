@@ -220,7 +220,7 @@ public class RegServlet extends HttpServlet {
 
         if (message != null) {
             request.setAttribute("Message", message);
-            getServletContext().getRequestDispatcher("/Report.jsp").forward(
+            getServletContext().getRequestDispatcher("/index.jsp").forward(
                     request, response);
         }
     }
