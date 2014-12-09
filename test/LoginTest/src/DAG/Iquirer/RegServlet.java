@@ -1,3 +1,8 @@
+package DAG.Iquirer;
+
+import DAG.Iquirer.Util.UtilHash;
+import DAG.Iquirer.Util.UtilMail;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,32 +19,18 @@ import java.util.zip.CRC32;
 @WebServlet(name = "RegServlet", urlPatterns = "/RegServlet")
 public class RegServlet extends HttpServlet {
 
+    // Переменные для регистрационных данных.
     protected static String NewUserName;
     protected static String NewUserEmail;
     protected static String NewUserPWD;
     protected static int user_id;
 
 
+    // Переменные для параметров почтового клиента.
     private String host;
     private String port;
     private String user;
     private String pass;
-
-
-//    public static String fixSqlFieldValue(String value) {
-//        if (value == null)
-//            return null;
-//        int length = value.length();
-//        StringBuffer fixedValue = new StringBuffer((int) (length * 1.1));
-//        for (int i = 0; i < length; i++) {
-//            char c = value.charAt(i);
-//            if (c == '\'')
-//                fixedValue.append("''");
-//            else
-//                fixedValue.append(c);
-//        }
-//        return fixedValue.toString();
-//    }
 
 
     public void init() {
@@ -51,10 +42,9 @@ public class RegServlet extends HttpServlet {
             System.out.println("Driver loading success!");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            System.out.println("====>>> ClassNotFoundException");
         }
 
-        // Получение параметров из web.xml
+        // Получение параметров для почтового клиента из web.xml
         ServletContext context = getServletContext();
         host = context.getInitParameter("host");
         port = context.getInitParameter("port");
@@ -70,85 +60,88 @@ public class RegServlet extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
 
-
+        // получение регистрационных данных.
         NewUserName = request.getParameter("NewUserName");
         NewUserEmail = request.getParameter("NewUserEmail");
         NewUserPWD = request.getParameter("NewUserPWD");
 
 
-        try {
-            NewUserPWD = UtilHash.getHash(NewUserPWD);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-
         boolean error = false;
-        String message = null;
+        String message = "";
 
+        // Параметры подключения базы данных
         String dbusername = "postgres";
         String dbpwd = "123";
         String dburl = "jdbc:postgresql://localhost:5432/poll_2";
 
-
-        if (!NewUserEmail.equals("") || !NewUserName.equals("") || !NewUserPWD.equals(""))
+        if (!NewUserEmail.equals("") && !NewUserName.equals("") && !NewUserPWD.equals("")) {
+            // Кэшируем пароль
             try {
-                System.out.println("====>>> Start Connection");
+                NewUserPWD = UtilHash.getHash(NewUserPWD);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+            try {
+                // Подключаем базу данных.
                 Connection db = DriverManager.getConnection(dburl, dbusername, dbpwd);
                 System.out.println("Connection success!");
                 Statement st = db.createStatement();
-                String sql = "SELECT user_name FROM users WHERE user_name ='" + NewUserName + "'";
-                ResultSet rs = st.executeQuery(sql);
+                ResultSet rs;
+                String sql;
+
+
+
+                // Проверка на наличие логина в БД.
+                sql = "SELECT user_name FROM users WHERE user_name ='" + NewUserName + "'";
+                rs = st.executeQuery(sql);
                 if (rs.next()) {
-                    rs.close();
-                    message = "Пользователь с иенем  " + NewUserName + "УЖЕ существует";
+                    message = "Имя \"" + NewUserName + "\" Занято!\n<br>\n";
                     error = true;
-                } else {
-                    rs.close();
+                }
+
+                // Проверка на наличие мыла в БД.
+                sql = "SELECT user_name FROM users WHERE user_email ='" + NewUserEmail + "'";
+                rs = st.executeQuery(sql);
+                if (rs.next()) {
+                    message = "Адрес \"" + NewUserEmail + "\" Занят!\n<br>\n";
+                    error = true;
+                }
+                rs.close();
+
+                if (!error) {
                     sql = "INSERT INTO users (user_name, user_email, user_pwd) VALUES ('" +
                             NewUserName + "', '" + NewUserEmail + "', '" + NewUserPWD + "')";
-                    System.out.println("====>>> Write OK!");
                     System.out.println(NewUserName + " :: " + NewUserEmail + " :: " + NewUserPWD);
-
                     int i = st.executeUpdate(sql);
                     if (i == 1) {
+                        message = "Юзер успешно добавлен.\n<br>\n";
 
-
-                        message = "Юзер успешно добавлен\n<br>\n";
-
-
-
-                        sql = "SELECT user_id FROM users WHERE user_email ='" + NewUserEmail + "'";
+                        // Создание базовых групп и включение его в группы "ADMINS" если юзер получает ID == 1
+                        sql = "SELECT user_id FROM users WHERE user_name='" + NewUserName + "'";
                         rs = st.executeQuery(sql);
                         rs.next();
                         user_id = rs.getInt(1);
-                        rs.close();
-
-
                         if (user_id == 1) {
                             sql = "INSERT INTO groups " +
                                     "(group_title, group_description, rights, group_author) VALUES " +
-                                    "('ADMINS','standard root group','{TRUE,TRUE}','1'), " +
-                                    "('USERS','standard user group','{TRUE,FALSE}','1')," +
-                                    "('Mail_OK', 'standard group for confirmed users','{TRUE,FALSE}','1');" +
+                                    "('ADMINS','Standard root group','{TRUE,TRUE}','" + user_id + "'), " +
+                                    "('USERS','Standard user group','{TRUE,FALSE}','" + user_id + "')," +
+                                    "('Mail_OK', 'Standard group for confirmed users','{TRUE,FALSE}','" + user_id + "');" +
                                     "INSERT INTO group_entries" +
                                     "(user_id, group_id, entry_author) VALUES " +
                                     "('1', '1', '1')";
                             i = st.executeUpdate(sql);
                             if (i == 3)
-                                message += "Группы успешно инициализированны\n<br>\n" +
-                                        "Привет АДМИН!\n<br>\n";
-                        } else {
-                            sql = "INSERT INTO group_entries " +
-                                    "(user_id, group_id, entry_author) VALUES " +
-                                    "('" + user_id + "', '2', '" + user_id + "')";
-                            i = st.executeUpdate(sql);
-                            if (i == 1)
-                                message += "Привет, Юзер!";
-
-
+                                message += "Группы инициализированны<br>\nПользователь включен в группу \"ADMINS\".<br>\n";
+                            else message += "ОШИБКА ЗАПИСИ В БД: Код работает некоректно!!!<br>.\n";
                         }
-                        st.close();
+
+                        sql = "INSERT INTO group_entries " +
+                                "(user_id, group_id, entry_author) VALUES " +
+                                "('" + user_id + "', '2', '" + user_id + "')";
+                        i = st.executeUpdate(sql);
+                        if (i == 1) message += "Пользователь включен в группу \"USERS\".<br>\n";
+                        else message += "ОШИБКА ЗАПИСИ В БД: Код работает некоректно!!!<br>\n";
 
 
                         // Создаём проверочную строку
@@ -165,8 +158,8 @@ public class RegServlet extends HttpServlet {
                             e.printStackTrace();
                         }
 
-                        String subject = "Подтверждение регистрации";
-                        String content = "Проверочная строка ==>  " + Xstring;
+                        String subject = "Подтверждение регистрации.";
+                        String content = "http://localhost:8080/AuthServlet/?" + Xstring;
 
                         try {
 
@@ -176,12 +169,14 @@ public class RegServlet extends HttpServlet {
 
                             // Запись куки в браузер клиенту.
                             Cookie c1 = new Cookie("XString", HasXstring);
-                            c1.setMaxAge(120);
+                            c1.setMaxAge(180);
                             response.addCookie(c1);
 
 
-                            message += "\n<br>Письмо отправлено! <br>\n" + "Куки установлены! <br>\n";
-                            message += "<form action=\"MailCheckerServlet\" method=\"post\">\n" +
+                            // Рисуем поле для ввода проверочной строки.
+                            message += "\n<br>Письмо отправлено. <br>\n" +
+                                    "Куки установлены. <br>\n<br>\n<br>\n" +
+                                    "<form action=\"MailCheckerServlet\" method=\"post\">\n" +
                                     "  <table border=\"0\" width=\"35%\" align=\"center\">\n" +
                                     "    <caption><h2>Подтверждение адреса e-mail</h2></caption>\n" +
                                     "    <tr>\n" +
@@ -199,11 +194,16 @@ public class RegServlet extends HttpServlet {
                         }
 
 
-
+                    } else { // if(i==1){
+                        error = true;
+                        message += "Ошибка при добавления пользователя в базу!!!\n<br>\n";
                     }
-                }
+
+                }//end  }else{
+
                 db.close();
                 st.close();
+
             } catch (SQLException e) {
                 message = "Ошибка. " + e.toString();
                 error = true;
@@ -211,17 +211,16 @@ public class RegServlet extends HttpServlet {
                 message = "Ошибка. " + e.toString();
                 error = true;
             }
-
+        } else {  //if (!NewUserEmail.equals("")&&!NewUserName.equals("")&&!NewUserPWD.equals("")){
+            message = "Некоректные данные!";
+        }
 
         if (error) {
             message += " \n<br>\n<br>\n Регистрация провалилась! Попробуйте снова!";
         }
 
-
-        if (message != null) {
-            request.setAttribute("Message", message);
-            getServletContext().getRequestDispatcher("/index.jsp").forward(
-                    request, response);
-        }
+        request.setAttribute("Message", message);
+        getServletContext().getRequestDispatcher("/index.jsp").forward(
+                request, response);
     }
 }

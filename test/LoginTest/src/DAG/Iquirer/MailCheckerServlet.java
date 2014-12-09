@@ -1,3 +1,7 @@
+package DAG.Iquirer;
+
+import DAG.Iquirer.Util.UtilHash;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -17,18 +21,17 @@ public class MailCheckerServlet extends HttpServlet {
                           javax.servlet.http.HttpServletResponse response)
             throws javax.servlet.ServletException, IOException {
 
+        // Подключаем драйвер базы данных.
         try {
             Class.forName("org.postgresql.Driver");
             System.out.println("Driver loading success!");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            System.out.println("====>>> ClassNotFoundException");
         }
 
 
+        // Ищем наш куки с ключём сессии.
         String CookieString = null;
-
-        // Ищем нужный куки
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals("XString")) {
@@ -45,45 +48,46 @@ public class MailCheckerServlet extends HttpServlet {
             e.printStackTrace();
         }
 
+        // Сравниваем строку, полученную от клинта, с той,
+        // которую отправили на e-mail.
         String Result;
         if (CookieString != null) {         // FALSE == Нужный куки не найден.
             if (HASHClientString.equals(CookieString)) {
                 Result = "Адрес " + RegServlet.NewUserEmail + " подтверждён!<br>";
                 checked = true;
 
-
+                // Параметры подключения базы данных.
                 String dbusername = "postgres";
                 String dbpwd = "123";
                 String dburl = "jdbc:postgresql://localhost:5432/poll_2";
 
+                // Подключаем базу данных.
                 try {
-                    System.out.println("====>>> Start Connection");
                     Connection db = DriverManager.getConnection(dburl, dbusername, dbpwd);
                     System.out.println("Connection success!");
                     Statement st = db.createStatement();
+
+                    // Добавляем пользоваетля в группу
+                    // указывающую на успешно подтверждённый адрес e-mail.
                     String sql = "INSERT INTO group_entries " +
                             "(user_id, group_id, entry_author) VALUES " +
                             "('" + RegServlet.user_id + "', '3', '" + RegServlet.user_id + "')";
                     st.executeUpdate(sql);
-
-
                     st.close();
                     db.close();
-
-
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-
-
             } else {
                 Result = "Подтверждение адреса e-mail провалилось! <br>\n";
                 checked = false;
             }
-
         } else {
             Result = "Cookie Устарели либо не были установлены.<br>\n";
         }
+
+        // Окрываем страницу index.jsp
+        // и передаём ей сообщение о результатах аутентифакации.
         request.setAttribute("Message", Result);
         getServletContext().getRequestDispatcher("/index.jsp").forward(
                 request, response);
