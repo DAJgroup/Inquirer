@@ -14,6 +14,8 @@ public class MainServlet extends HttpServlet {
     protected void doGet(javax.servlet.http.HttpServletRequest request,
                          javax.servlet.http.HttpServletResponse response)
             throws javax.servlet.ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
 
         // Подключаем драйвер базы данных.
         try {

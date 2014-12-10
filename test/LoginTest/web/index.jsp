@@ -15,9 +15,9 @@
 		<link rel="stylesheet" href="css/style.css">
 		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>
-			<script src='//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js'></script>
+			<script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
 		<![endif]-->
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 		<script src="js/jquery.min.js"></script>
 		<!--<script src="http://cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js"></script>-->
 		<!--<script src="js/Chart.min.js"></script>-->
@@ -45,24 +45,24 @@
 					<div class="allforms" id="loginformwrapper">
 						<div class="popup_close" id="closeloginform"></div>
 						<form id="loginform" action="AuthServlet" method="post" name="login" autocomplete="on">
-							<label for="login">Логин:</label>
-							<input type="text" class="login" name="UserName">
-							<label for="password">Пароль:</label>
-							<input type="password" class="password" name="UserPWD">
+							<label for="autorizlogin">Логин:<small>english please</small></label>
+							<input type="text" id="autorizlogin" name="UserName">
+							<label for="autorizpass">Пароль:<small>english please</small></label>
+							<input type="password" id="autorizpass" name="UserPwd">
 							<input type="submit" value="Войти">
 						</form>
 					</div>
 					<div class="allforms" id="regformwrapper">
 						<div class="popup_close" id="closeregform"></div>
 						<form id="regform" action="RegServlet" method="post" name="registration" autocomplete="on">
-							<label for="login">Логин:</label>
-							<input type="text" class="login" name="NewUserName">
+							<label for="registrlogin">Логин:<small>english please</small></label>
+							<input type="text" id="registrlogin" name="NewUserName">
 							<label for="email">E-mail:<small>please@email.me</small></label>
 							<input type="text" id="email" name="NewUserEmail">
-							<label for="password">Пароль:</label>
-							<input type="password" class="password" name="NewUserPWD">
-							<label for="repassword">Подтвердите пароль:</label>
-							<input type="password" class="password" name="repassword">
+							<label for="registrpass">Пароль:<small>english please</small></label>
+							<input type="password" id="registrpass" name="NewUserPWD">
+							<label for="registrrepass">Подтвердите пароль:<small>english please</small></label>
+							<input type="password" id="registrrepass" name="NeUserREPWD">
 							<label for="firstname">Имя:<small>just letters</small></label>
 							<input type="text" id="firstname" name="firstname">
 							<label for="lastname">Фамилия:<small>just letters</small></label>
@@ -82,7 +82,6 @@
 				<section><h2>Hello World!</h2>
 					<article><h3>Hi People!!!</h3></article>
 				</section>
-				<div align="center"><h3><%=request.getAttribute("Message")%></div>
 			</div><!-- END of content-->
 		</div><!-- END of main-->
 		<footer>
