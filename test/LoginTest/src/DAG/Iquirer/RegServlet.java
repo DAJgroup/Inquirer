@@ -3,6 +3,7 @@ package DAG.Iquirer;
 import DAG.Iquirer.Util.UtilHash;
 import DAG.Iquirer.Util.UtilMail;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -43,15 +44,7 @@ public class RegServlet extends HttpServlet {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-        // Получение параметров для почтового клиента из web.xml
-        ServletContext context = getServletContext();
-        host = context.getInitParameter("host");
-        port = context.getInitParameter("port");
-        user = context.getInitParameter("user");
-        pass = context.getInitParameter("pass");
     }
-
 
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)
@@ -59,6 +52,7 @@ public class RegServlet extends HttpServlet {
 
 
         request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
 
         // получение регистрационных данных.
         NewUserName = request.getParameter("NewUserName");
@@ -144,56 +138,6 @@ public class RegServlet extends HttpServlet {
                         else message += "ОШИБКА ЗАПИСИ В БД: Код работает некоректно!!!<br>\n";
 
 
-                        // Создаём проверочную строку
-                        String Xstring = String.valueOf(System.currentTimeMillis());
-                        CRC32 crc = new CRC32();
-                        crc.update(Xstring.getBytes());
-                        Xstring = Long.toHexString(crc.getValue()).toUpperCase();
-
-                        // Хешируем проверочную строку
-                        String HasXstring = null;
-                        try {
-                            HasXstring = UtilHash.getHash(Xstring);
-                        } catch (NoSuchAlgorithmException e) {
-                            e.printStackTrace();
-                        }
-
-                        String subject = "Подтверждение регистрации.";
-                        String content = "http://localhost:8080/AuthServlet/?" + Xstring;
-
-                        try {
-
-                            // Отправляем письмо
-                            UtilMail.sendEmail(host, port, user, pass,
-                                    NewUserEmail, subject, content);
-
-                            // Запись куки в браузер клиенту.
-                            Cookie c1 = new Cookie("XString", HasXstring);
-                            c1.setMaxAge(180);
-                            response.addCookie(c1);
-
-
-                            // Рисуем поле для ввода проверочной строки.
-                            message += "\n<br>Письмо отправлено. <br>\n" +
-                                    "Куки установлены. <br>\n<br>\n<br>\n" +
-                                    "<form action=\"MailCheckerServlet\" method=\"post\">\n" +
-                                    "  <table border=\"0\" width=\"35%\" align=\"center\">\n" +
-                                    "    <caption><h2>Подтверждение адреса e-mail</h2></caption>\n" +
-                                    "    <tr>\n" +
-                                    "      <td width=\"50%\">Введите полученную строку:</td>\n" +
-                                    "      <td><input type=\"text\" name=\"ClientStr\" size=\"50\" title=\"string\"/></td>\n" +
-                                    "    </tr>\n" +
-                                    "    <tr>\n" +
-                                    "      <td colspan=\"2\" align=\"center\"><input type=\"submit\" value=\"Send\"/></td>\n" +
-                                    "    </tr>\n" +
-                                    "  </table>\n" +
-                                    "</form>";
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                            message += "\n<br>\n Что-то пошло не так...    " + ex.getMessage();
-                        }
-
-
                     } else { // if(i==1){
                         error = true;
                         message += "Ошибка при добавления пользователя в базу!!!\n<br>\n";
@@ -217,6 +161,12 @@ public class RegServlet extends HttpServlet {
 
         if (error) {
             message += " \n<br>\n<br>\n Регистрация провалилась! Попробуйте снова!";
+        } else {
+            try {
+                UtilMail.SendEmail(response,NewUserEmail);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
         }
 
         request.setAttribute("Message", message);

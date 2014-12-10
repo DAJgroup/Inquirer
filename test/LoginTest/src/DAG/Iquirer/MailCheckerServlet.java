@@ -15,9 +15,8 @@ import java.sql.Statement;
 @WebServlet(name = "MailCheckerServlet", urlPatterns = "/MailCheckerServlet")
 public class MailCheckerServlet extends HttpServlet {
 
-    protected static boolean checked;
 
-    protected void doPost(javax.servlet.http.HttpServletRequest request,
+    protected void doGet(javax.servlet.http.HttpServletRequest request,
                           javax.servlet.http.HttpServletResponse response)
             throws javax.servlet.ServletException, IOException {
 
@@ -30,11 +29,11 @@ public class MailCheckerServlet extends HttpServlet {
         }
 
 
-        // Ищем наш куки с ключём сессии.
+        // Ищем наш куки.
         String CookieString = null;
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("XString")) {
+            if (cookie.getName().equals("MailCheck")) {
                 CookieString = cookie.getValue();
             }
         }
@@ -43,7 +42,7 @@ public class MailCheckerServlet extends HttpServlet {
         System.out.println(ClientString);
         String HASHClientString = "";
         try {
-            HASHClientString = UtilHash.getHash(ClientString);
+            HASHClientString = UtilHash.getHash(ClientString);  // TODO солить
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -53,8 +52,7 @@ public class MailCheckerServlet extends HttpServlet {
         String Result;
         if (CookieString != null) {         // FALSE == Нужный куки не найден.
             if (HASHClientString.equals(CookieString)) {
-                Result = "Адрес " + RegServlet.NewUserEmail + " подтверждён!<br>";
-                checked = true;
+                Result = "Адрес " + RegServlet.NewUserEmail + " подтверждён!<br>\n";
 
                 // Параметры подключения базы данных.
                 String dbusername = "postgres";
@@ -69,6 +67,7 @@ public class MailCheckerServlet extends HttpServlet {
 
                     // Добавляем пользоваетля в группу
                     // указывающую на успешно подтверждённый адрес e-mail.
+                    // TODO заменить наличие в группе Mail_OK на отсутствие в групе Mail_NOT_OK.
                     String sql = "INSERT INTO group_entries " +
                             "(user_id, group_id, entry_author) VALUES " +
                             "('" + RegServlet.user_id + "', '3', '" + RegServlet.user_id + "')";
@@ -79,8 +78,7 @@ public class MailCheckerServlet extends HttpServlet {
                     e.printStackTrace();
                 }
             } else {
-                Result = "Подтверждение адреса e-mail провалилось! <br>\n";
-                checked = false;
+                Result = "Подтверждение адреса e-mail провалилось!<br>\n";
             }
         } else {
             Result = "Cookie Устарели либо не были установлены.<br>\n";

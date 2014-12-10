@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
-@WebServlet(name = "AuthServlet", urlPatterns = "/AuthServlet")
+@WebServlet(name = "AuthServlet", urlPatterns = "/AuthServlet") //TODO Проверка продтверждённой почты
 public class AuthServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)
@@ -31,7 +31,6 @@ public class AuthServlet extends HttpServlet {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
 
         // Подключаем драйвер базы данных.
         try {
@@ -71,31 +70,32 @@ public class AuthServlet extends HttpServlet {
                 if (rs.next()) {
 
 
-                    // Генирация ключа сессии
-                    String session_Xkey = String.valueOf(1 + (int) (Math.random() * 1999999999));
+                    // Генерация ключа сессии
+                    String session_Key = String.valueOf(1 + (int) (Math.random() * 1999999999)); // TODO сделать генерацию строки.
                     try {
-                        session_Xkey = UtilHash.getHash(String.valueOf(session_Xkey));
+                        session_Key = UtilHash.getHash(String.valueOf(session_Key)); // TODO солить
                     } catch (NoSuchAlgorithmException e) {
                         e.printStackTrace();
                     }
 
                     // Запсиь сесии в БД
                     sql = "INSERT INTO user_sessions (user_id, session_key, session_ip) VALUES " +
-                            "('" + user_id + "', '" + session_Xkey + "', '" + RemoteIP + "')";
+                            "('" + user_id + "', '" + session_Key + "', '" + RemoteIP + "')";
                     st.executeUpdate(sql);
 
                     // Получение уникального идентификатора сессии
-                    sql = "SELECT session_id FROM user_sessions WHERE session_key='" + session_Xkey + "'";
+                    sql = "SELECT session_id FROM user_sessions WHERE session_key='" + session_Key + "' " +
+                            "AND user_id='"+user_id+"'";
                     rs = st.executeQuery(sql);
                     rs.next();
                     int session_ID = rs.getInt(1);
 
                     // Запись куки с ключом и индетификатором сессии
-                    Cookie c_key = new Cookie("session_Xkey", session_Xkey);
-                    c_key.setMaxAge(900);
+                    Cookie c_key = new Cookie("SessionKey", session_Key);
+                    c_key.setMaxAge(10*60);
                     response.addCookie(c_key);
-                    Cookie c_id = new Cookie("session_Xkey", String.valueOf(session_ID));
-                    c_id.setMaxAge(900);
+                    Cookie c_id = new Cookie("SessionID", String.valueOf(session_ID));
+                    c_id.setMaxAge(10*60);
                     response.addCookie(c_id);
 
 
