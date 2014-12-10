@@ -20,10 +20,13 @@ public class AuthServlet extends HttpServlet {
             throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
 
         // Получаем логин/пароль из index.jsp
         String UserLogin = request.getParameter("UserName");
         String UserPWD = request.getParameter("UserPWD");
+        System.out.println("AUTH UserLogin  --  "+UserLogin);
+        System.out.println("AUTH UserPWD    --  "+UserPWD);
 
         // Хэшируем пароль
         try {

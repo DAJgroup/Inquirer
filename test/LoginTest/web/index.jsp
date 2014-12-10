@@ -48,7 +48,7 @@
 							<label for="autorizlogin">Логин:<small>english please</small></label>
 							<input type="text" id="autorizlogin" name="UserName">
 							<label for="autorizpass">Пароль:<small>english please</small></label>
-							<input type="password" id="autorizpass" name="UserPwd">
+							<input type="password" id="autorizpass" name="UserPWD">
 							<input type="submit" value="Войти">
 						</form>
 					</div>
@@ -82,6 +82,11 @@
 				<section><h2>Hello World!</h2>
 					<article><h3>Hi People!!!</h3></article>
 				</section>
+				<div style="text-align: center;">
+					<h2><%=request.getAttribute("Message")%>
+					</h2>
+					<br/>
+				</div>
 			</div><!-- END of content-->
 		</div><!-- END of main-->
 		<footer>

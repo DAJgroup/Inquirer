@@ -58,6 +58,10 @@ public class RegServlet extends HttpServlet {
         NewUserName = request.getParameter("NewUserName");
         NewUserEmail = request.getParameter("NewUserEmail");
         NewUserPWD = request.getParameter("NewUserPWD");
+        System.out.println("REG NewUserName   --  "+NewUserName);
+        System.out.println("REG NewUserEmail  --  "+NewUserEmail);
+        System.out.println("REG NewUserPWD    --  "+NewUserPWD);
+
 
 
         boolean error = false;
@@ -126,7 +130,7 @@ public class RegServlet extends HttpServlet {
                                     "('1', '1', '1')";
                             i = st.executeUpdate(sql);
                             if (i == 3)
-                                message += "Группы инициализированны<br>\nПользователь включен в группу \"ADMINS\".<br>\n";
+                                message += "Группы инициализированны.<br>\nПользователь включен в группу \"ADMINS\".<br>\n";
                             else message += "ОШИБКА ЗАПИСИ В БД: Код работает некоректно!!!<br>.\n";
                         }
 
@@ -160,13 +164,15 @@ public class RegServlet extends HttpServlet {
         }
 
         if (error) {
-            message += " \n<br>\n<br>\n Регистрация провалилась! Попробуйте снова!";
+            message += "<br>\n<br>\n Регистрация провалилась! Попробуйте снова!";
         } else {
             try {
                 UtilMail.SendEmail(response,NewUserEmail);
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
+            message += "<br>\n<br>\nНа вышу почту было выслано письмо с ссылкой для подтверждения регистрации.<br>";
+
         }
 
         request.setAttribute("Message", message);

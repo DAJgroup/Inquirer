@@ -229,7 +229,7 @@ jQuery(function($){
 
 		$('#autorizlogin').change(jVal.autorizlogin);
 		$('#autorizpass').change(jVal.autorizpass);
-		$('#registrlogin').change(jVal.autorizlogin);
+		$('#registrlogin').change(jVal.registrlogin);
 		$('#registrpass').change(jVal.registrpass);
 		$('#registrrepass').change(jVal.registrrepass);
 		$('#email').change(jVal.email);
