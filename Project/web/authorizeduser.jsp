@@ -32,9 +32,10 @@
 		<a id="logo" href="#" title="DAJ Group"></a>
 		<nav>
 			<ul class="nav-list">
-				<li id="greeting">Добро пожаловать, <b>Nickname</b></li>
-				<li><a title="Мой кабинет" href="#">Мой кабинет</a></li>
-				<li><a title="Выход" href="#" id="exit">Выход</a></li>
+				<li id="greeting">Добро пожаловать, <b><%=request.getAttribute("Nickname")%>
+				</b></li>
+				<li><a title="Мой кабинет" href="${pageContext.request.contextPath}/">Мой кабинет</a></li>
+				<li><a title="Выход" href="${pageContext.request.contextPath}/LogOut" id="exit">Выход</a></li>
 				<li><a title="О проекте" href="#">О проекте</a></li>
 				<li><a title="FAQ" href="#">FAQ</a></li>
 			</ul>

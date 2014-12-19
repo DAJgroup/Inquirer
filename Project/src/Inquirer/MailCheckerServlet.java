@@ -17,7 +17,7 @@ public class MailCheckerServlet extends HttpServlet {
 
 
     protected void doGet(javax.servlet.http.HttpServletRequest request,
-                          javax.servlet.http.HttpServletResponse response)
+                         javax.servlet.http.HttpServletResponse response)
             throws javax.servlet.ServletException, IOException {
 
         // Подключаем драйвер базы данных.

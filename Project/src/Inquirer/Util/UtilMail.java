@@ -18,8 +18,7 @@ import java.util.zip.CRC32;
 public class UtilMail extends HttpServlet {
 
 
-
-    public static void SendEmail(HttpServletResponse response, String toAddress)
+    public static void SendEmail(HttpServletResponse response, String toAddress, String content)
             throws ServletException, IOException, MessagingException {
         response.setCharacterEncoding("UTF-8");
 
@@ -51,7 +50,7 @@ public class UtilMail extends HttpServlet {
         }
 
         String subject = "Подтверждение регистрации.";
-        String content = "http://localhost:8080/MailCheckerServlet?ClientStr=" + Xstring; //request.getRequestURL().toString(); TODO подсунуть динамически.
+        content += Xstring; //request.getRequestURL().toString(); TODO подсунуть динамически.
 
         // Запись куки в браузер клиенту.
         try {

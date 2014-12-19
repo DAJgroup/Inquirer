@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
@@ -22,6 +23,7 @@ public class RegServlet extends HttpServlet {
     protected static String NewUserEmail;
     protected static String NewUserPWD;
     protected static int user_id;
+    protected static String ServerURL;
 
 
     // Переменные для параметров почтового клиента.
@@ -55,10 +57,19 @@ public class RegServlet extends HttpServlet {
         NewUserName = request.getParameter("NewUserName");
         NewUserEmail = request.getParameter("NewUserEmail");
         NewUserPWD = request.getParameter("NewUserPWD");
-        System.out.println("REG NewUserName   --  "+NewUserName);
-        System.out.println("REG NewUserEmail  --  "+NewUserEmail);
-        System.out.println("REG NewUserPWD    --  "+NewUserPWD);
+        System.out.println("REG NewUserName   --  " + NewUserName);
+        System.out.println("REG NewUserEmail  --  " + NewUserEmail);
+        System.out.println("REG NewUserPWD    --  " + NewUserPWD);
 
+
+        URL path = this.getClass().getClassLoader().getResource("");
+        System.out.println(path);
+
+        String Host = request.getServerName();
+        String Port = Integer.toString(request.getServerPort());
+        String Path = request.getServletPath();
+        ServerURL = "http://" + Host + ":" + Port + Path + getServletContext().getContextPath() + "/MailCheckerServlet";
+        System.out.println(ServerURL);
 
 
         boolean error = false;
@@ -83,7 +94,6 @@ public class RegServlet extends HttpServlet {
                 Statement st = db.createStatement();
                 ResultSet rs;
                 String sql;
-
 
 
                 // Проверка на наличие логина в БД.
@@ -164,14 +174,14 @@ public class RegServlet extends HttpServlet {
             message += "<br>\n<br>\n Регистрация провалилась! Попробуйте снова!";
         } else {
             try {
-                UtilMail.SendEmail(response,NewUserEmail);
+                UtilMail.SendEmail(response, NewUserEmail, ServerURL);
+                message += "<br>\n<br>\nНа вышу почту было выслано письмо с ссылкой для подтверждения регистрации.<br>";
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
-            message += "<br>\n<br>\nНа вышу почту было выслано письмо с ссылкой для подтверждения регистрации.<br>";
+
 
         }
-
         request.setAttribute("Message", message);
         getServletContext().getRequestDispatcher("/index.jsp").forward(
                 request, response);

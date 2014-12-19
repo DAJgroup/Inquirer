@@ -8,6 +8,12 @@ Header set Expires "Fri, 21 Dec 2012 20:00:00 GMT" #Until the end of the world
 FileETag None
 </FilesMatch>
 
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !(.*)/$
+RewriteRule ^(.*[^/])$ $1/ [L,R=301]
+
 # Сжатие текстовых файлов
 AddOutputFilterByType DEFLATE text/plain
 AddOutputFilterByType DEFLATE text/html

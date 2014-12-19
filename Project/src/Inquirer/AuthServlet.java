@@ -23,14 +23,20 @@ public class AuthServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
+
         URL path = this.getClass().getClassLoader().getResource("");
         System.out.println(path);
+        String ServerUrl = request.getServerName();
+        System.out.println("урл -  " + ServerUrl);
+
+        String ServerPort = Integer.toString(request.getServerPort());
+        System.out.println("порт -  " + ServerPort);
 
         // Получаем логин/пароль из index.jsp
         String UserLogin = request.getParameter("UserName");
         String UserPWD = request.getParameter("UserPWD");
-        System.out.println("AUTH UserLogin  --  "+UserLogin);
-        System.out.println("AUTH UserPWD    --  "+UserPWD);
+        System.out.println("AUTH UserLogin  --  " + UserLogin);
+        System.out.println("AUTH UserPWD    --  " + UserPWD);
 
         // Хэшируем пароль
         try {
@@ -54,6 +60,8 @@ public class AuthServlet extends HttpServlet {
 
         // Сообщение о результате атентификации
         String LoginMessage = "";
+        boolean AuthBool = false;
+        String JspRedirect;
 
         // Полученаем IP клиента
         String RemoteIP = getIP.getRemoteIP(request);
@@ -92,23 +100,23 @@ public class AuthServlet extends HttpServlet {
 
                     // Получение уникального идентификатора сессии
                     sql = "SELECT session_id FROM user_sessions WHERE session_key='" + session_Key + "' " +
-                            "AND user_id='"+user_id+"'";
+                            "AND user_id='" + user_id + "'";
                     rs = st.executeQuery(sql);
                     rs.next();
                     int session_ID = rs.getInt(1);
 
                     // Запись куки с ключом и индетификатором сессии
                     Cookie c_key = new Cookie("SessionKey", session_Key);
-                    c_key.setMaxAge(10*60);
+                    c_key.setMaxAge(72 * 60 * 60);
                     response.addCookie(c_key);
                     Cookie c_id = new Cookie("SessionID", String.valueOf(session_ID));
-                    c_id.setMaxAge(10*60);
+                    c_id.setMaxAge(72 * 60 * 60);
                     response.addCookie(c_id);
 
 
                     // Запись сообщения об удачной атентификации
-                    LoginMessage += "Успешная авторизация\n<br>\n" +
-                            "Куки установленны\n<br>\n<br>\n<br>\n";
+                    LoginMessage += "Успешная авторизация!\n<br>\n";
+                    AuthBool = true;
 
 
                     // Пулучам список групп пользоваетля и добавляем его к сообщению
@@ -143,10 +151,17 @@ public class AuthServlet extends HttpServlet {
             e.printStackTrace();
         }
 
+        if (AuthBool) {
+            JspRedirect = "/authorizeduser.jsp";
+        } else {
+            JspRedirect = "/index.jsp";
+        }
+
         // Окрываем страницу index.jsp
         // и передаём ей сообщение о результатах аутентифакации.
         request.setAttribute("Message", LoginMessage);
-        getServletContext().getRequestDispatcher("/index.jsp").forward(
+        request.setAttribute("Nickname", UserLogin);
+        getServletContext().getRequestDispatcher(JspRedirect).forward(
                 request, response);
 
     }
