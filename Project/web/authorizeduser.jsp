@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -147,6 +148,11 @@
 			<article><h3>Hi People!!!</h3></article>
 			<button disabled="disabled">Отправить</button>
 		</section>
+		<div style="text-align: center;">
+			<h2><%=request.getAttribute("Message")%>
+			</h2>
+			<br/>
+		</div>
 	</div>
 	<!-- END of content -->
 </div>

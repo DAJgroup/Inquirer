@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -42,15 +43,15 @@
 			<!-- Popups -->
 			<div class="allforms" id="loginformwrapper">
 				<div class="popup_close" id="closeloginform"></div>
-				<form id="loginform" action="#" method="post" name="login" autocomplete="on">
+				<form id="loginform" action="AuthServlet" method="post" name="login" autocomplete="on">
 					<label for="autorizlogin">Логин:
 						<small>or e-mail; english please</small>
 					</label>
-					<input type="text" id="autorizlogin" name="autorizlogin">
+					<input type="text" id="autorizlogin" name="UserName">
 					<label for="autorizpass">Пароль:
 						<small>english please</small>
 					</label>
-					<input type="password" id="autorizpass" name="autorizpass">
+					<input type="password" id="autorizpass" name="UserPWD">
 					<!--<input class="sendform" type="submit" value="Войти">-->
 					<button class="sendform" type="submit">Войти</button>
 				</form>
@@ -58,23 +59,23 @@
 
 			<div class="allforms" id="regformwrapper">
 				<div class="popup_close" id="closeregform"></div>
-				<form id="regform" action="#" method="post" name="registration" autocomplete="on">
+				<form id="regform" action="RegServlet" method="post" name="registration" autocomplete="on">
 					<label for="registrlogin">Логин:
 						<small>english please</small>
 					</label>
-					<input type="text" id="registrlogin" name="registrlogin">
+					<input type="text" id="registrlogin" name="NewUserName">
 					<label for="email">E-mail:
 						<small>please@email.me</small>
 					</label>
-					<input type="text" id="email" name="email">
+					<input type="text" id="email" name="NewUserEmail">
 					<label for="registrpass">Пароль:
 						<small>english please</small>
 					</label>
-					<input type="password" id="registrpass" name="registrpass">
+					<input type="password" id="registrpass" name="NewUserPWD">
 					<label for="registrrepass">Подтвердите пароль:
 						<small>english please</small>
 					</label>
-					<input type="password" id="registrrepass" name="registrrepass">
+					<input type="password" id="registrrepass" name="NeUserREPWD">
 					<label for="firstname">Имя:
 						<small>just letters</small>
 					</label>
@@ -156,8 +157,11 @@
 			<article><h3>Hi People!!!</h3></article>
 			<button disabled="disabled">Отправить</button>
 		</section>
-
-
+		<div style="text-align: center;">
+			<h2><%=request.getAttribute("Message")%>
+			</h2>
+			<br/>
+		</div>
 	</div>
 	<!-- END of content -->
 </div>
