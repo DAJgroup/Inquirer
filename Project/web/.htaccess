@@ -1,0 +1,27 @@
+# Задание кодировки
+AddDefaultCharset UTF-8
+
+# Кеширование статических ресурсов
+<FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|js|css|swf)$">
+Header set Cache-Control "public"
+Header set Expires "Fri, 21 Dec 2012 20:00:00 GMT" #Until the end of the world
+FileETag None
+</FilesMatch>
+
+# Сжатие текстовых файлов
+AddOutputFilterByType DEFLATE text/plain
+AddOutputFilterByType DEFLATE text/html
+AddOutputFilterByType DEFLATE text/xml
+AddOutputFilterByType DEFLATE text/css
+AddOutputFilterByType DEFLATE application/xml
+AddOutputFilterByType DEFLATE application/xhtml+xml
+AddOutputFilterByType DEFLATE application/rss+xml
+AddOutputFilterByType DEFLATE application/javascript
+AddOutputFilterByType DEFLATE application/x-javascript
+
+# Запрет выдачи листинга пустого каталога
+Options -Indexes
+
+# Индексные файлы
+DirectoryIndex index.html index.jsp index.shtml index.pl index.cgi index.php
+
