@@ -57,7 +57,7 @@ public class MailCheckerServlet extends HttpServlet {
                 // Параметры подключения базы данных.
                 String dbusername = "postgres";
                 String dbpwd = "123";
-                String dburl = "jdbc:postgresql://localhost:5432/poll_2";
+                String dburl = "jdbc:postgresql://localhost:5432/poll";
 
                 // Подключаем базу данных.
                 try {

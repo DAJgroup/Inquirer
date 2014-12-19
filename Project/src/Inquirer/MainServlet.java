@@ -6,6 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.*;
 
 @WebServlet(name = "MainServlet", urlPatterns = "")
@@ -16,6 +17,12 @@ public class MainServlet extends HttpServlet {
             throws javax.servlet.ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
+
+        URL path = this.getClass().getClassLoader().getResource("");
+        System.out.println(path);
+
+        String rootPath = getServletContext().getRealPath("");
+        System.out.println(rootPath);
 
         // Подключаем драйвер базы данных.
         try {
@@ -28,7 +35,7 @@ public class MainServlet extends HttpServlet {
         // Параметры подключения базы данных
         String dbusername = "postgres";
         String dbpwd = "123";
-        String dburl = "jdbc:postgresql://localhost:5432/poll_2";
+        String dburl = "jdbc:postgresql://localhost:5432/poll";
 
         String RemoteIP = getIP.getRemoteIP(request);
         String message = null;

@@ -10,30 +10,56 @@ jQuery(function($){
 		$('#mask').fadeIn('fast');
 		$('#regformwrapper').show();
 	});
-	$('.allforms .popup_close').click(function(e){
+
+	//Popups #sendedregemailwrapper, #incorrectlogpasswrapper, #rememberpasswrapper
+	/*                               Работает, временно вызов установлен на клик по логотипу
+	 $('#logo').click(function(e){
 		e.preventDefault();
-		$('#mask, .allforms').hide();
-		$('#autorizloginInfo').hide();
+	 $('#mask').fadeIn('fast');
+	 $('#sendedregemailwrapper').show();
+	});
+	 */
+	/*                               Работает, временно вызов установлен на клик по логотипу
+	 $('#logo').click(function(e){
+	 e.preventDefault();
+	 $('#mask').fadeIn('fast');
+	 $('#incorrectlogpasswrapper').show();
+	 });
+	 */
+	/*                               Работает, временно вызов установлен на клик по логотипу
+	 $('#logo').click(function(e){
+	 e.preventDefault();
+	 $('#mask').fadeIn('fast');
+	 $('#rememberpasswrapper').show();
+	 });
+	 */
+	//END of popups #sendedregemailwrapper,	#incorrectlogpasswrapper, #rememberpasswrapper
+
+	$('.allforms .popup_close, #mask').click(function (e) {
+		e.preventDefault();
+		$('#mask, .allforms, #autorizloginInfo, #reautorizloginInfo, #autorizpassInfo, #reautorizpassInfo, #registrloginInfo, #registrpassInfo, #registrrepassInfo, #emailInfo, #reemailInfo, #firstnameInfo, #lastnameInfo').hide();
+		/*		$('#autorizloginInfo').hide();
 		$('#autorizpassInfo').hide();
 		$('#registrloginInfo').hide();
 		$('#registrpassInfo').hide();
 		$('#registrrepassInfo').hide();
 		$('#emailInfo').hide();
 		$('#firstnameInfo').hide();
-		$('#lastnameInfo').hide();
+		 $('#lastnameInfo').hide();*/
 	});
-	$('#mask').click(function(){
-		$(this).hide();
-		$('.allforms').hide();
-		$('#autorizloginInfo').hide();
-		$('#autorizpassInfo').hide();
-		$('#registrloginInfo').hide();
-		$('#registrpassInfo').hide();
-		$('#registrrepassInfo').hide();
-		$('#emailInfo').hide();
-		$('#firstnameInfo').hide();
-		$('#lastnameInfo').hide();
-	});
+
+	/*	$ ('#mask').click(function(){
+	 $(this).hide();
+	 $('.allforms, #autorizloginInfo, #autorizpassInfo, #registrloginInfo, #registrpassInfo, #registrrepassInfo, #emailInfo, #firstnameInfo, #lastnameInfo').hide();
+	 //$('#autorizloginInfo').hide();
+	 //$('#autorizpassInfo').hide();
+	 //$('#registrloginInfo').hide();
+	 //$('#registrpassInfo').hide();
+	 //$('#registrrepassInfo').hide();
+	 //$('#emailInfo').hide();
+	 //$('#firstnameInfo').hide();
+	 //$('#lastnameInfo').hide();
+	 });*/
 
 	$(document).ready(function(){
 		var jVal = {
@@ -48,12 +74,33 @@ jQuery(function($){
 					left: pos.left+ele.width()+15
 				});
 
-				if(ele.val().length < 6 || !autorizloginRegex.test(ele.val())){
+				if (ele.val().length < 5 || !autorizloginRegex.test(ele.val())) {
 					jVal.errors = true;
-					nameInfo.removeClass('correct').addClass('error').html('&lt; Ваш логин должен быть<br> не менее 6 символов').show();
+					nameInfo.removeClass('correct').addClass('error').html('<i class="fa fa-arrow-left"></i> Ваш логин должен быть<br> не менее 5 символов').show();
 					ele.removeClass('normal').addClass('wrong');
 				}else{
-					nameInfo.removeClass('error').addClass('correct').html('√').show();
+					nameInfo.removeClass('error').addClass('correct').html('<i class="fa fa-check fa-lg"></i>').show();
+					ele.removeClass('wrong').addClass('normal');
+				}
+			},
+
+			'reautorizlogin': function () {
+				$('body').append('<div id="reautorizloginInfo" class="info"></div>');
+				var nameInfo = $('#reautorizloginInfo');
+				var ele = $('#reautorizlogin');
+				var pos = ele.offset();
+				var reautorizloginRegex = /^[a-zA-Z0-9_ +-`'*]+$/gi;
+				nameInfo.css({
+					top: pos.top - 3,
+					left: pos.left + ele.width() + 15
+				});
+
+				if (ele.val().length < 5 || !reautorizloginRegex.test(ele.val())) {
+					jVal.errors = true;
+					nameInfo.removeClass('correct').addClass('error').html('<i class="fa fa-arrow-left"></i> Ваш логин должен быть<br> не менее 5 символов').show();
+					ele.removeClass('normal').addClass('wrong');
+				} else {
+					nameInfo.removeClass('error').addClass('correct').html('<i class="fa fa-check fa-lg"></i>').show();
 					ele.removeClass('wrong').addClass('normal');
 				}
 			},
@@ -71,10 +118,31 @@ jQuery(function($){
 
 				if(ele.val().length < 6 || !autorizpassRegex.test(ele.val())){
 					jVal.errors = true;
-					nameInfo.removeClass('correct').addClass('error').html('&lt; Ваш пароль должен быть<br> не менее 6 символов').show();
+					nameInfo.removeClass('correct').addClass('error').html('<i class="fa fa-arrow-left"></i> Ваш пароль должен быть<br> не менее 6 символов').show();
 					ele.removeClass('normal').addClass('wrong');
 				}else{
-					nameInfo.removeClass('error').addClass('correct').html('√').show();
+					nameInfo.removeClass('error').addClass('correct').html('<i class="fa fa-check fa-lg"></i>').show();
+					ele.removeClass('wrong').addClass('normal');
+				}
+			},
+
+			'reautorizpass': function () {
+				$('body').append('<div id="reautorizpassInfo" class="info"></div>');
+				var nameInfo = $('#reautorizpassInfo');
+				var ele = $('#reautorizpass');
+				var pos = ele.offset();
+				var reautorizpassRegex = /^[a-zA-Z0-9_ +-`'*]+$/gi;
+				nameInfo.css({
+					top: pos.top - 3,
+					left: pos.left + ele.width() + 15
+				});
+
+				if (ele.val().length < 6 || !reautorizpassRegex.test(ele.val())) {
+					jVal.errors = true;
+					nameInfo.removeClass('correct').addClass('error').html('<i class="fa fa-arrow-left"></i> Ваш пароль должен быть<br> не менее 6 символов').show();
+					ele.removeClass('normal').addClass('wrong');
+				} else {
+					nameInfo.removeClass('error').addClass('correct').html('<i class="fa fa-check fa-lg"></i>').show();
 					ele.removeClass('wrong').addClass('normal');
 				}
 			},
@@ -90,12 +158,12 @@ jQuery(function($){
 					left: pos.left+ele.width()+15
 				});
 
-				if(ele.val().length < 6 || !registrloginRegex.test(ele.val())){
+				if (ele.val().length < 5 || !registrloginRegex.test(ele.val())) {
 					jVal.errors = true;
-					nameInfo.removeClass('correct').addClass('error').html('&lt; Ваш логин должен быть<br> не менее 6 символов').show();
+					nameInfo.removeClass('correct').addClass('error').html('<i class="fa fa-arrow-left"></i> Ваш логин должен быть<br> не менее 5 символов').show();
 					ele.removeClass('normal').addClass('wrong');
 				}else{
-					nameInfo.removeClass('error').addClass('correct').html('√').show();
+					nameInfo.removeClass('error').addClass('correct').html('<i class="fa fa-check fa-lg"></i>').show();
 					ele.removeClass('wrong').addClass('normal');
 				}
 			},
@@ -113,10 +181,10 @@ jQuery(function($){
 
 				if(ele.val().length < 6 || !registrpassRegex.test(ele.val())){
 					jVal.errors = true;
-					nameInfo.removeClass('correct').addClass('error').html('&lt; Ваш пароль должен быть<br> не менее 6 символов').show();
+					nameInfo.removeClass('correct').addClass('error').html('<i class="fa fa-arrow-left"></i> Ваш пароль должен быть<br> не менее 6 символов').show();
 					ele.removeClass('normal').addClass('wrong');
 				}else{
-					nameInfo.removeClass('error').addClass('correct').html('√').show();
+					nameInfo.removeClass('error').addClass('correct').html('<i class="fa fa-check fa-lg"></i>').show();
 					ele.removeClass('wrong').addClass('normal');
 				}
 			},
@@ -125,6 +193,7 @@ jQuery(function($){
 				$('body').append('<div id="registrrepassInfo" class="info"></div>');
 				var nameInfo = $('#registrrepassInfo');
 				var ele = $('#registrrepass');
+				var reele = $('#registrpass');
 				var pos = ele.offset();
 				var registrrepassRegex = /^[a-zA-Z0-9_ +-`'*]+$/gi;
 				nameInfo.css({
@@ -132,12 +201,12 @@ jQuery(function($){
 					left: pos.left+ele.width()+15
 				});
 
-				if(ele.val().length < 6 || !registrrepassRegex.test(ele.val())){
+				if (ele.val().length < 6 || ele.val() !== reele.val() || !registrrepassRegex.test(ele.val())) {
 					jVal.errors = true;
-					nameInfo.removeClass('correct').addClass('error').html('&lt; Ваш пароль должен быть<br> не менее 6 символов').show();
+					nameInfo.removeClass('correct').addClass('error').html('<i class="fa fa-arrow-left"></i> Ваш пароль должен быть<br> не менее 6 символов и он<br> должен повторять первый').show();
 					ele.removeClass('normal').addClass('wrong');
 				}else{
-					nameInfo.removeClass('error').addClass('correct').html('√').show();
+					nameInfo.removeClass('error').addClass('correct').html('<i class="fa fa-check fa-lg"></i>').show();
 					ele.removeClass('wrong').addClass('normal');
 				}
 			},
@@ -151,13 +220,35 @@ jQuery(function($){
 					top: pos.top-3,
 					left: pos.left+ele.width()+15
 				});
-				var emailRegex = /^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.]{2,6})$/gi;
+				//var emailRegex = /^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.{}]{2,6})$/gi; был заменен, something@gmail.......com "проходит"
+				var emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi;
 				if(!emailRegex.test(ele.val())){
 					jVal.errors = true;
-					nameInfo.removeClass('correct').addClass('error').html('&lt; введите корректный e-mail').show();
+					nameInfo.removeClass('correct').addClass('error').html('<i class="fa fa-arrow-left"></i> введите корректный e-mail').show();
 					ele.removeClass('normal').addClass('wrong');
 				}else{
-					nameInfo.removeClass('error').addClass('correct').html('√').show();
+					nameInfo.removeClass('error').addClass('correct').html('<i class="fa fa-check fa-lg"></i>').show();
+					ele.removeClass('wrong').addClass('normal');
+				}
+			},
+
+			'reemail': function () {
+				$('body').append('<div id="reemailInfo" class="info"></div>');
+				var nameInfo = $('#reemailInfo');
+				var ele = $('#reemail');
+				var pos = ele.offset();
+				nameInfo.css({
+					top: pos.top - 3,
+					left: pos.left + ele.width() + 15
+				});
+				//var reemailRegex = /^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.{}]{2,6})$/gi; был заменен, something@gmail.......com "проходит"
+				var reemailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi;
+				if (!reemailRegex.test(ele.val())) {
+					jVal.errors = true;
+					nameInfo.removeClass('correct').addClass('error').html('<i class="fa fa-arrow-left"></i> введите корректный e-mail').show();
+					ele.removeClass('normal').addClass('wrong');
+				} else {
+					nameInfo.removeClass('error').addClass('correct').html('<i class="fa fa-check fa-lg"></i>').show();
 					ele.removeClass('wrong').addClass('normal');
 				}
 			},
@@ -175,10 +266,10 @@ jQuery(function($){
 
 				if(ele.val().length < 2 || !firstnameRegex.test(ele.val())){
 					jVal.errors = true;
-					nameInfo.removeClass('correct').addClass('error').html('&lt; Ваше имя должно быть не менее<br> 2 символов, без цифр').show();
+					nameInfo.removeClass('correct').addClass('error').html('<i class="fa fa-arrow-left"></i> Ваше имя должно быть не менее<br> 2 символов, без цифр').show();
 					ele.removeClass('normal').addClass('wrong');
 				}else{
-					nameInfo.removeClass('error').addClass('correct').html('√').show();
+					nameInfo.removeClass('error').addClass('correct').html('<i class="fa fa-check fa-lg"></i>').show();
 					ele.removeClass('wrong').addClass('normal');
 				}
 			},
@@ -195,31 +286,34 @@ jQuery(function($){
 				});
 				if(ele.val().length < 2 || !lastnameRegex.test(ele.val())){
 					jVal.errors = true;
-					nameInfo.removeClass('correct').addClass('error').html('&lt; Ваша фамилия должна быть не менее<br> 2 символов, без цифр').show();
+					nameInfo.removeClass('correct').addClass('error').html('<i class="fa fa-arrow-left"></i> Ваша фамилия должна быть не<br> менее 2 символов, без цифр').show();
 					ele.removeClass('normal').addClass('wrong');
 				}else{
-					nameInfo.removeClass('error').addClass('correct').html('√').show();
+					nameInfo.removeClass('error').addClass('correct').html('<i class="fa fa-check fa-lg"></i>').show();
 					ele.removeClass('wrong').addClass('normal');
 				}
 			},
 
 			'sendIt' : function (){
 				if(!jVal.errors) {
-					$('#regform').submit();
+					$('#loginform').submit();
 				}
 			}
 		};
 
-		$('#send').click(function (){
+		$('.sendform').click(function () {
 			var obj = $.browser.webkit ? $('body') : $('html');
-			obj.animate({ scrollTop: $('#regform').offset().top }, 750, function (){
+			obj.animate({scrollTop: $('#loginform').offset().top}, 750, function () {
 				jVal.errors = false;
 				jVal.autorizlogin();
+				jVal.reautorizlogin();
 				jVal.autorizpass();
+				jVal.reautorizpass();
 				jVal.registrlogin();
 				jVal.registrpass();
 				jVal.registrrepass();
 				jVal.email();
+				jVal.reemail();
 				jVal.firstname();
 				jVal.lastname();
 				jVal.sendIt();
@@ -228,11 +322,14 @@ jQuery(function($){
 		});
 
 		$('#autorizlogin').change(jVal.autorizlogin);
+		$('#reautorizlogin').change(jVal.reautorizlogin);
 		$('#autorizpass').change(jVal.autorizpass);
+		$('#reautorizpass').change(jVal.reautorizpass);
 		$('#registrlogin').change(jVal.registrlogin);
 		$('#registrpass').change(jVal.registrpass);
 		$('#registrrepass').change(jVal.registrrepass);
 		$('#email').change(jVal.email);
+		$('#reemail').change(jVal.reemail);
 		$('#firstname').change(jVal.firstname);
 		$('#lastname').change(jVal.lastname);
 	});

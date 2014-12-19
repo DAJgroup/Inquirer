@@ -1,7 +1,7 @@
 html, body, #main {height: 100%;}
 body{
 	background:url("../images/background.png") #e0e0e0;
-	font: Arial, Helvetica, sans-serif;
+	font: 100% Arial, Helvetica, sans-serif;
 }
 body > #main{
 	height: auto;
@@ -18,6 +18,11 @@ a, a:link, a:visited, a:active, a:focus, a:hover {
 	color: #0f0f0f;
 	text-decoration: none;
 	cursor:pointer;
+}
+
+p {
+	margin: 0.3em 0;
+	text-indent: 1.5em;
 }
 /* CLEAR FIX*/
 .clearfix:after {content:".";
@@ -59,6 +64,7 @@ header{
 	background-size:100px;
 	cursor:pointer;
 	display:block;
+	outline: none;
 	position:absolute; left: 0; top: 0;
 	height:100px;
 	width:100px;
@@ -66,9 +72,13 @@ header{
 }
 
 nav{
+
+}
+
+nav ul {
 	background:url("../images/background.png") #e0e0e0;
 	position:fixed; right: 0; top: 0;
-	margin: 1em 0 0;
+	margin: 1em 1em 0 0 !important;
 	border:1px solid grey;
 	/*-webkit-border-radius:1em;*/
 	/*-moz-border-radius:1em;*/
@@ -77,37 +87,43 @@ nav{
 	/*-moz-box-shadow: #999 0 0 1em;*/
 	box-shadow: #999 0 0 1em;
 	overflow: hidden;
-}
-nav ul{
+	z-index: 1;
 }
 nav li{
 	display:block;
 	float:left;
-	padding:0 30px;
+	padding: 0 1em;
 	line-height:1.5em;
 	border-left:1px solid transparent;
 	border-right:1px solid transparent;
+	margin-left: 0 !important;
 }
 nav li:hover{
-	background: #41E3F5;/*#E43F1F*/
-	border-left:1px solid #999;
-	border-right:1px solid #999;
+	background: #41E3F5; /*#41E3F5 #E43F1F*/
 }
 nav li:hover:first-child{
-	border-left:1px solid transparent;
+	/*border-left:1px solid transparent;*/
 }
 nav li:hover:last-child{
-	border-right:1px solid transparent;
+	/*border-right:1px solid transparent;*/
 }
 nav li a{
 	/*text-decoration:none;*/
 }
 
+#greeting b {
+	line-height: 1.4em;
+}
+
+#greeting:hover {
+	background: none;
+}
+
 /* --- END HEADER --- */
 
-
-
-#loginformwrapper, #regformwrapper{
+#loginformwrapper, #regformwrapper, #sendedregemail,
+#incorrectlogpass, #rememberpass, #sendedregemailwrapper,
+#incorrectlogpasswrapper, #rememberpasswrapper {
 	display: none;
 }
 
@@ -115,7 +131,7 @@ nav li a{
 	border:1px solid #aaa;
 	background:url("../images/background.png") #e0e0e0;
 	width:20%;
-	min-width: 230px;
+	min-width: 206px;
 	overflow: hidden;
 	padding: 1em;
 	margin: 0 auto;
@@ -127,10 +143,11 @@ nav li a{
 	/*-webkit-box-shadow: #fff 0 0 1em;*/
 	/*-moz-box-shadow: #fff 0 0 1em;*/
 	box-shadow: #fff 0 0 1em;
-	text-align: center;
+	text-align: justify;
 	z-index: 999;
 }
-.allforms input{
+
+.allforms input, .allforms button {
 	width: 100%;
 	box-sizing:border-box;
 	/*-webkit-box-shadow:inset 0 1px 5px rgba(0, 0, 0, 0.2);*/
@@ -197,7 +214,8 @@ input[type="text"]:focus, input[type="password"]:focus{
 	color: #222;
 	z-index: 1000;
 }
-.allforms input[type="submit"]{
+
+.allforms input[type="submit"], button[type="submit"] {
 	display:block;
 	margin-top:1em;
 	box-shadow:2px 2px 2px rgba(0, 0, 0, 0.2);
@@ -233,14 +251,35 @@ input[type="text"]:focus, input[type="password"]:focus{
 	display: none;
 }
 
-section{}
+html, body, #main, #content, header, aside, section, footer {
+	box-sizing: border-box;
+}
+
+aside {
+	width: 25%;
+	float: left;
+	padding: 0 1em;
+}
+
+section {
+	width: 75%;
+	float: left;
+	padding: 0 1em;
+	margin-bottom: 1em;
+}
 article{}
 
 footer{
+	border-top: 1px solid #aaa;
+	background: url("../images/background.png") #e0e0e0;
+	min-width: 206px;
+	overflow: hidden;
+	margin: -49px auto 0;
+	height: 48px;
 	position:relative;
-	margin-top: -66px;
-	height:66px;
+	/*-webkit-box-shadow: #fff 0 0 1em;*/
+	/*-moz-box-shadow: #fff 0 0 1em;*/
+	box-shadow: #fff 0 0 1em;
 	text-align:center;
-	background:url("../images/testfon.png") #c0c0c0;
 	clear:both;
 }

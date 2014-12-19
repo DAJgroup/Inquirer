@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
@@ -21,6 +22,9 @@ public class AuthServlet extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
+
+        URL path = this.getClass().getClassLoader().getResource("");
+        System.out.println(path);
 
         // Получаем логин/пароль из index.jsp
         String UserLogin = request.getParameter("UserName");
@@ -46,7 +50,7 @@ public class AuthServlet extends HttpServlet {
         // Параметры подключения базы данных
         String dbusername = "postgres";
         String dbpwd = "123";
-        String dburl = "jdbc:postgresql://localhost:5432/poll_2";
+        String dburl = "jdbc:postgresql://localhost:5432/poll";
 
         // Сообщение о результате атентификации
         String LoginMessage = "";

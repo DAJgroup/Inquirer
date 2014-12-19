@@ -67,7 +67,7 @@ public class RegServlet extends HttpServlet {
         // Параметры подключения базы данных
         String dbusername = "postgres";
         String dbpwd = "123";
-        String dburl = "jdbc:postgresql://localhost:5432/poll_2";
+        String dburl = "jdbc:postgresql://localhost:5432/poll";
 
         if (!NewUserEmail.equals("") && !NewUserName.equals("") && !NewUserPWD.equals("")) {
             // Кэшируем пароль

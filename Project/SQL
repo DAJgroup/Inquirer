@@ -1,0 +1,100 @@
+
+/*
+-- !!!  Отдельный скрипт для создания БД.  !!!
+-- (В многокомандном скрипте запрещено создавать БД.)  
+
+ 
+-- Database: poll
+
+CREATE DATABASE poll
+  WITH ENCODING='UTF8'
+       OWNER=postgres
+       LC_COLLATE='ru_RU.UTF-8'  -- Для Windows: ='Russian_Russia.1251' 
+       LC_CTYPE='ru_RU.UTF-8'    -- Для UNIX:    ='ru_RU.UTF-8'         
+       CONNECTION LIMIT=-1;
+
+
+-- !!!  Отдельный скрипт для создания БД.  !!!
+*/
+
+
+
+
+
+
+
+
+
+-- Table: users
+
+CREATE TABLE users
+(
+   user_id serial NOT NULL PRIMARY KEY, 
+   user_name character varying(32) NOT NULL UNIQUE, 
+   user_email character varying(32) NOT NULL UNIQUE, 
+   user_pwd character varying(64) NOT NULL, 
+   user_create_date timestamp without time zone NOT NULL DEFAULT now()
+) 
+WITH (
+  OIDS = FALSE
+)
+;
+ALTER TABLE users OWNER TO postgres;
+
+
+
+-- Table: groups
+
+CREATE TABLE groups
+(
+  group_id serial NOT NULL PRIMARY KEY,
+  group_title character varying(16) NOT NULL,
+  group_description character varying(1000),
+  rights boolean[],
+  group_create_date timestamp without time zone NOT NULL DEFAULT now(),
+  group_author integer NOT NULL REFERENCES users (user_id)
+) 
+WITH (
+  OIDS = FALSE
+)
+;
+ALTER TABLE groups OWNER TO postgres;
+
+
+
+-- Table: group_entries
+
+CREATE TABLE group_entries
+(
+  user_id integer NOT NULL REFERENCES users (user_id),
+  group_id integer NOT NULL REFERENCES groups (group_id),
+  entry_date timestamp without time zone NOT NULL DEFAULT now(),
+  entry_author integer NOT NULL REFERENCES users (user_id),
+  PRIMARY KEY (user_id, group_id)
+) 
+WITH (
+  OIDS = FALSE
+)
+;
+ALTER TABLE group_entries OWNER TO postgres;
+
+
+
+-- Table: user_sessions
+
+CREATE TABLE user_sessions
+(
+   user_id integer NOT NULL REFERENCES users (user_id), 
+   session_id bigserial NOT NULL UNIQUE,
+   session_key character varying(64) NOT NULL,
+   session_ip inet NOT NULL,
+   session_open_date timestamp without time zone NOT NULL DEFAULT now(),
+   last_entry timestamp without time zone NOT NULL DEFAULT now()
+) 
+WITH (
+  OIDS = FALSE
+)
+;
+ALTER TABLE user_sessions OWNER TO postgres;
+
+
