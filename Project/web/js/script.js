@@ -12,27 +12,25 @@ jQuery(function($){
 	});
 
 	//Popups #sendedregemailwrapper, #incorrectlogpasswrapper, #rememberpasswrapper
-	/*                               Работает, временно вызов установлен на клик по логотипу
-	 $('#logo').click(function(e){
+
+	$('#popup_1').click(function (e) {
 		e.preventDefault();
-	 $('#mask').fadeIn('fast');
-	 $('#sendedregemailwrapper').show();
+		$('#mask').fadeIn('fast');
+		$('#sendedregemailwrapper').show();
 	});
-	 */
-	/*                               Работает, временно вызов установлен на клик по логотипу
-	 $('#logo').click(function(e){
-	 e.preventDefault();
-	 $('#mask').fadeIn('fast');
-	 $('#incorrectlogpasswrapper').show();
-	 });
-	 */
-	/*                               Работает, временно вызов установлен на клик по логотипу
-	 $('#logo').click(function(e){
-	 e.preventDefault();
-	 $('#mask').fadeIn('fast');
-	 $('#rememberpasswrapper').show();
-	 });
-	 */
+
+	$('#popup_2').click(function (e) {
+		e.preventDefault();
+		$('#mask').fadeIn('fast');
+		$('#incorrectlogpasswrapper').show();
+	});
+
+	$('#popup_3').click(function (e) {
+		e.preventDefault();
+		$('#mask').fadeIn('fast');
+		$('#rememberpasswrapper').show();
+	});
+
 	//END of popups #sendedregemailwrapper,	#incorrectlogpasswrapper, #rememberpasswrapper
 
 	$('.allforms .popup_close, #mask').click(function (e) {
@@ -332,6 +330,13 @@ jQuery(function($){
 		$('#reemail').change(jVal.reemail);
 		$('#firstname').change(jVal.firstname);
 		$('#lastname').change(jVal.lastname);
+	});
+
+	$('.arrowopen').click(function (e) {
+		e.preventDefault();
+		$(this).toggleClass('arrowclose');
+		$(this).next().slideToggle(0);
+		//$(this).parent().next().slideToggle( 0 );
 	});
 
 });
