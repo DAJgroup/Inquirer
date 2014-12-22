@@ -1,3 +1,5 @@
+package Inquirer.Util;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
