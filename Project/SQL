@@ -17,14 +17,6 @@ CREATE DATABASE poll
 -- !!!  Отдельный скрипт для создания БД.  !!!
 */
 
-
-
-
-
-
-
-
-
 -- Table: users
 
 CREATE TABLE users
