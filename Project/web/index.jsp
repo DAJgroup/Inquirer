@@ -43,7 +43,8 @@
 			<!-- Popups -->
 			<div class="allforms" id="loginformwrapper">
 				<div class="popup_close" id="closeloginform"></div>
-				<form id="loginform" action="AuthServlet" method="post" name="login" autocomplete="on">
+				<form id="loginform" action="${pageContext.request.contextPath}/AuthServlet" method="post" name="login"
+					  autocomplete="on">
 					<label for="autorizlogin">Логин:
 						<small>or e-mail; english please</small>
 					</label>
@@ -59,7 +60,8 @@
 
 			<div class="allforms" id="regformwrapper">
 				<div class="popup_close" id="closeregform"></div>
-				<form id="regform" action="RegServlet" method="post" name="registration" autocomplete="on">
+				<form id="regform" action="${pageContext.request.contextPath}/RegServlet" method="post"
+					  name="registration" autocomplete="on">
 					<label for="registrlogin">Логин:
 						<small>english please</small>
 					</label>
@@ -151,12 +153,17 @@
 				<li><a id="popup_5" href="#"></a></li>
 				<li><a id="popup_6" href="#"></a></li>
 			</ul>
+			<a href="adminpage.html">ADMIN</a>
+			<br/><br/><br/>
+			<a href="userpage.html">USER</a>
+
 		</aside>
 
-		<section><h2>Hello World!</h2>
-			<article><h3>Hi People!!!</h3></article>
-			<button disabled="disabled">Отправить</button>
+		<section>
+			<article></article>
+			<article></article>
 		</section>
+
 		<div style="text-align: center;">
 			<h2><%=request.getAttribute("Message")%>
 			</h2>

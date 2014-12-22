@@ -50,7 +50,7 @@ public class UtilMail extends HttpServlet {
         }
 
         String subject = "Подтверждение регистрации.";
-        content += Xstring; //request.getRequestURL().toString(); TODO подсунуть динамически.
+        content += "?ClientStr=" + Xstring; //request.getRequestURL().toString(); TODO подсунуть динамически.
 
         // Запись куки в браузер клиенту.
         try {

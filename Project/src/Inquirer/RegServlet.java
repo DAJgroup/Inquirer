@@ -68,8 +68,10 @@ public class RegServlet extends HttpServlet {
         String Host = request.getServerName();
         String Port = Integer.toString(request.getServerPort());
         String Path = request.getServletPath();
-        ServerURL = "http://" + Host + ":" + Port + Path + getServletContext().getContextPath() + "/MailCheckerServlet";
+        ServerURL = "http://" + Host + ":" + Port + getServletContext().getContextPath() + "/MailCheckerServlet";
         System.out.println(ServerURL);
+        System.out.println("SPATH  =" + getServletContext().getContextPath() + ".");
+        System.out.println("CPATH  =" + Path + ".");
 
 
         boolean error = false;
