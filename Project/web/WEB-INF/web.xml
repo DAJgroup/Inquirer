@@ -26,7 +26,6 @@
     </context-param>
 
 
-
     <welcome-file-list>
         <welcome-file>MineServlet</welcome-file>
     </welcome-file-list>
