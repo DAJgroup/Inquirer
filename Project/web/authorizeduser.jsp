@@ -141,13 +141,12 @@
 
 
         <aside>
-            <a href="http://sitear.ru/material/jquery-validaciya-form-i-polej">jQuery валидация форм и полей</a><br/>
-            <a title="jQuery Form Styler" href="http://dimox.name/jquery-form-styler/">jQuery Form Styler</a>
+            <!--<a href="http://sitear.ru/material/jquery-validaciya-form-i-polej">jQuery валидация форм и полей</a><br/>
+            <a title="jQuery Form Styler" href="http://dimox.name/jquery-form-styler/">jQuery Form Styler</a>-->
         </aside>
 
-        <section><h2>Hello World!</h2>
-            <article><h3>Hi People!!!</h3></article>
-            <button disabled="disabled">Отправить</button>
+        <section>
+            <article></article>
         </section>
         <div style="text-align: center;">
             <h2><%=request.getAttribute("Message")%>
