@@ -18,12 +18,10 @@ import java.security.NoSuchAlgorithmException;
 @WebServlet(name = "sender", urlPatterns = "/sender")
 public class sender extends HttpServlet {
 
-
     private String host;
     private String port;
     private String user;
     private String pass;
-
 
     public void init() {
 
@@ -35,7 +33,6 @@ public class sender extends HttpServlet {
         pass = context.getInitParameter("pass");
     }
 
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
@@ -45,7 +42,6 @@ public class sender extends HttpServlet {
         String UserName = request.getParameter("UserName");
         String message = "";
         boolean error;
-
 
         try {
             // Генерация ссылки
@@ -75,7 +71,8 @@ public class sender extends HttpServlet {
 
             String subject = "Подтверждение регистрации.";
             // <a href="URL">текст ссылки</a>
-            String content = "\n<a href=\"" + ServerURL + "?ClientStr=" + Xstring.toString() + "\">" + ServerURL + "</a>\n";
+            //String content = "\n<a href=\"" + ServerURL + "?ClientStr=" + Xstring.toString() + "\">" + ServerURL + "</a>\n";
+            String content = "<div><p>Здравствуйте, " + UserName + ".</p><p>Благодарим вас за регистрацию на сайте INQUIRER.</p><p>Данное письмо отправлено почтовым роботом сервера INQUIRER и не требует ответа.</p><p>Чтобы подтвердить свою регистрацию и начать пользоваться сервисом, пожалуйста, перейдите по этой ссылке:</p>" + "\n<a href=\"" + ServerURL + "?ClientStr=" + Xstring.toString() + "\">ПОДТВЕРДИТЬ РЕГИСТРАЦИЮ</a>\n<br><p>Обратная связь - <a href=\"mailto:taras.daj@gmail.com\">taras.daj@gmail.com</a></p></div>";
             System.out.println("Send \"" + content + "\" to " + UserEmail);
 
             // Запись куки в браузер клиенту.
@@ -91,10 +88,8 @@ public class sender extends HttpServlet {
                 error = true;
             }
 
-
             UtilMail.sendEmail(host, port, user, pass, UserEmail, subject, content);
-            message += "<br>\n<br>\nНа вашу почту было выслано письмо для подтверждения регистрации.<br>";
-
+            message += "На вашу почту было выслано письмо для подтверждения регистрации.";
 
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -102,12 +97,10 @@ public class sender extends HttpServlet {
             error = true;
         }
 
-
         message = "<b>\n" + message + "\n</b>\n";
         request.setAttribute("Message", message);
         request.setAttribute("Nickname", UserName);
         getServletContext().getRequestDispatcher(JspRedirect).forward(
                 request, response);
-
     }
 }

@@ -84,7 +84,7 @@ public class RegServlet extends HttpServlet {
         m = p.matcher(NewUserName);
         if (NewUserName.length() < 5 || !m.matches()) {
             error = true;
-            message += "Логин указан некорректно!\n<br>\n";
+            message += "Логин указан некорректно!<br>\n";
         }
         System.out.println("REG NewUserName       --  \"" + NewUserName + "\" - " + (NewUserName.length() < 5 && m.matches()));
         System.out.println(NewUserName.length());
@@ -94,7 +94,7 @@ public class RegServlet extends HttpServlet {
         m = p.matcher(NewUserEmail);
         if (!m.matches()) {
             error = true;
-            message += "E-mail указан некорректно!\n<br>\n";
+            message += "E-mail указан некорректно!<br>\n";
         }
         System.out.println("REG NewUserEmail      --  \"" + NewUserEmail + "\" - " + m.matches());
 
@@ -104,13 +104,13 @@ public class RegServlet extends HttpServlet {
         m2 = p.matcher(NewUserREPWD);
         if ((NewUserPWD.length() < 6 || !m.matches()) || (NewUserREPWD.length() < 6 || !m2.matches())) {
             error = true;
-            message += "Пароль указан некорректно!\n<br>\n";
+            message += "Пароль указан некорректно!<br>\n";
         }
 
 
         if (!NewUserPWD.equals(NewUserREPWD)) {
             error = true;
-            message += "При подтверждении пароля допущена ошибка!\n<br>\n";
+            message += "При подтверждении пароля допущена ошибка!<br>\n";
         } 
         
         System.out.println("REG NewUserPWD        --  \"" + NewUserPWD + "\" - " + m.matches());
@@ -121,7 +121,7 @@ public class RegServlet extends HttpServlet {
         m = p.matcher(NewUserFirstName);
         if (NewUserFirstName.length() < 2 || !m.matches()) {
             error = true;
-            message += "Имя указано некорректно!\n<br>\n";
+            message += "Имя указано некорректно!<br>\n";
         }
         System.out.println("REG NewUserFirstName  --  \"" + NewUserFirstName + "\" - " + m.matches());
 
@@ -129,10 +129,10 @@ public class RegServlet extends HttpServlet {
         m = p.matcher(NewUserLastName);
         if (NewUserLastName.length() < 2 || !m.matches()) {
             error = true;
-            message += "Фамилия указана некорректно!\n<br>\n";
+            message += "Фамилия указана некорректно!<br>\n";
         }
         System.out.println("REG NewUserLastName   --  \"" + NewUserLastName + "\" - " + m.matches());
-        message = "<b>\n" + message + "\n</b>\n";
+        message = "<b>\n" + message + "</b>\n";
 
 
         if (!error) {
@@ -177,7 +177,7 @@ public class RegServlet extends HttpServlet {
                     ex.printStackTrace();
                 }
                 UtilMail.sendEmail(host, port, user, pass, NewUserEmail, subject, content);
-                message += "<br>\n<br>\nНа вашу почту было выслано письмо для подтверждения регистрации.\n<br>\n<br>\n";
+                message += "<br>\nНа вашу почту было выслано письмо для подтверждения регистрации.<br>\n";
             } catch (MessagingException e) {
                 e.printStackTrace();
                 message += "ОШИБКА: Невозможно отправить письмо на указаный Вами адрес!";
@@ -217,7 +217,7 @@ public class RegServlet extends HttpServlet {
                             "OR user_email ='" + NewUserEmail + "'";
                     rs = st.executeQuery(sql);
                     if (rs.next()) {
-                        message = "Учётная запись с таким именем и/или e-mail уже существует\n<br>\n";
+                        message = "Учетная запись с таким именем и/или e-mail уже существует<br>\n";
                         error = true;
                     }
                     rs.close();
@@ -258,11 +258,11 @@ public class RegServlet extends HttpServlet {
                             i = st.executeUpdate(sql);
                             if (i == 1) {
                             } else {
-                                message += "ОШИБКА ЗАПИСИ В БД: Код работает некоректно!!!<br>\n";
+                                message += "ОШИБКА ЗАПИСИ В БД: Код работает некорректно!!!<br>\n";
                                 error = true;
                             }
                         } else { // if(i==1){
-                            message += "Ошибка при добавления пользователя в базу!!!\n<br>\n";
+                            message += "Ошибка при добавлении пользователя в базу!!!<br>\n";
                             error = true;
                         }
                     }

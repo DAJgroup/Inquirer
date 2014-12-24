@@ -150,7 +150,7 @@
                 <li><a id="popup_3" href="#">Забыли пароль?</a></li>
             </ul>
 
-            <ul id="aside_menu">
+            <ul id="aside_menu" style="display:none">
                 <li class="first_level"><a class="arrowopen" href="#"><p>Опросники <span>#</span></p></a>
                     <ul class="expand">
                         <li class="second_level"><a class="arrowopen" href="#"><p>Мои</p></a>

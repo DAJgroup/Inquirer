@@ -108,7 +108,7 @@ public class MailCheckerServlet extends HttpServlet {
 
         // Окрываем страницу index.jsp
         // и передаём ей сообщение о результатах аутентифакации.
-        Result = "<b>\n" + Result + "\n</b>\n";
+        Result = "\n<b>" + Result + "</b>\n";
         request.setAttribute("Message", Result);
         request.setAttribute("Nickname", UserName);
         getServletContext().getRequestDispatcher(JspRedirect).forward(

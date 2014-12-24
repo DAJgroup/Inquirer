@@ -146,13 +146,13 @@
         </aside>
 
         <section>
-            <article></article>
+            <article>
+                <div style="text-align: center;">
+                    <h3><%=request.getAttribute("Message")%></h3><br/>
+                </div>
+            </article>
         </section>
-        <div style="text-align: center;">
-            <h2><%=request.getAttribute("Message")%>
-            </h2>
-            <br/>
-        </div>
+
     </div>
     <!-- END of content -->
 </div>
