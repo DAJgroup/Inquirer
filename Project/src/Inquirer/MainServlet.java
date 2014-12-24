@@ -68,7 +68,6 @@ public class MainServlet extends HttpServlet {
                     sql = "SELECT last_entry, session_ip FROM user_sessions WHERE session_id='" + SessionID + "'";
                     rs = st.executeQuery(sql);
                     rs.next();
-                    message += "Последний визит: \n<br>\n" + rs.getString(1) + "\n<br>\n" + rs.getString(2);
 
                     sql = "UPDATE user_sessions SET last_entry=NOW() WHERE session_id='" + SessionID + "'";
                     st.executeUpdate(sql);
@@ -83,6 +82,38 @@ public class MainServlet extends HttpServlet {
                             JspRedirect = "/adminpage.jsp";
                     }
 
+                    boolean mailbool = false;
+                    sql = "SELECT group_title FROM groups WHERE group_id IN " +
+                            "(SELECT group_id FROM group_entries WHERE user_id='" + UserID + "')";
+                    rs = st.executeQuery(sql);
+                    while (rs.next()) {
+                        if (rs.getString(1).equals("Mail_OK"))
+                            mailbool = true;
+                    }
+                    if (!mailbool) {
+
+                        sql = "SELECT user_email FROM users WHERE user_id ='" + UserID + "'";
+                        rs = st.executeQuery(sql);
+                        rs.next();
+                        String UserEmail = rs.getString(1);
+
+                        message += "<br>\n<br>\n<font color=\"#CC0000\">Ваша учутная запись не подтверждена!</font>\n<br>\n";
+
+                        message += "<center>" +
+                                "<form action=\"" + getServletContext().getContextPath() + "/sender\" method=\"post\" name=\"send\">\n" +
+                                " <input type=\"hidden\" name=\"UserEmail\" value=\"" + UserEmail + "\">\n" +
+                                " <input type=\"hidden\" name=\"JspRedirect\" value=\"" + JspRedirect + "\">\n" +
+                                " <input type=\"hidden\" name=\"UserName\" value=\"" + UserLogin + "\">\n" +
+                                "<button type=\"submit\">Повторно отправить письмо<br>\n" +
+                                "для подтверждения регистрации</button>\n" +
+                                "</form>" +
+                                "</center>";
+                    }
+
+                    st.close();
+                    rs.close();
+                    db.close();
+
                 } else {
                     message = "";
                 }
@@ -96,6 +127,7 @@ public class MainServlet extends HttpServlet {
         }
 
 
+        message = "<b>\n" + message + "\n</b>\n";
         request.setAttribute("Message", message);
         request.setAttribute("Nickname", UserLogin);
         getServletContext().getRequestDispatcher(JspRedirect).forward(

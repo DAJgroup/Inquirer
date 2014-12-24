@@ -177,7 +177,7 @@ public class RegServlet extends HttpServlet {
                     ex.printStackTrace();
                 }
                 UtilMail.sendEmail(host, port, user, pass, NewUserEmail, subject, content);
-                message += "<br>\n<br>\nНа вашу почту было выслано письмо для подтверждения регистрации.<br>";
+                message += "<br>\n<br>\nНа вашу почту было выслано письмо для подтверждения регистрации.\n<br>\n<br>\n";
             } catch (MessagingException e) {
                 e.printStackTrace();
                 message += "ОШИБКА: Невозможно отправить письмо на указаный Вами адрес!";
@@ -230,7 +230,6 @@ public class RegServlet extends HttpServlet {
                                 "', '" + NewUserFirstName + "', '" + NewUserLastName + "')";
                         int i = st.executeUpdate(sql);
                         if (i == 1) {
-                            message = "Учётная запись создана.\n<br>\n";
 
                             // Создание базовых групп и включение его в группы "ADMINS" если юзер получает ID == 1
                             sql = "SELECT user_id FROM users WHERE user_name='" + NewUserName + "'";
@@ -248,10 +247,7 @@ public class RegServlet extends HttpServlet {
                                         "('1', '1', '1')";
                                 i = st.executeUpdate(sql);
                                 if (i == 3) {
-                                    message += "Группы инициализированны.<br>\n" +
-                                            "Пользователь включен в группу \"ADMINS\".<br>\n";
                                 } else {
-                                    message += "ОШИБКА ЗАПИСИ В БД: Код работает некоректно!!!<br>.\n";
                                     error = true;
                                 }
                             }
@@ -261,7 +257,6 @@ public class RegServlet extends HttpServlet {
                                     "('" + user_id + "', '2', '" + user_id + "')";
                             i = st.executeUpdate(sql);
                             if (i == 1) {
-                                message += "Пользователь включен в группу \"USERS\".<br>\n";
                             } else {
                                 message += "ОШИБКА ЗАПИСИ В БД: Код работает некоректно!!!<br>\n";
                                 error = true;
@@ -271,8 +266,9 @@ public class RegServlet extends HttpServlet {
                             error = true;
                         }
                     }
-                    db.close();
                     st.close();
+                    rs.close();
+                    db.close();
 
                 } catch (SQLException e) {
                     message = "Ошибка. " + e.toString();
@@ -352,6 +348,10 @@ public class RegServlet extends HttpServlet {
                     if (rs.getString(1).equals("ADMINS"))
                         JspRedirect = "/adminpage.jsp";
                 }
+
+                st.close();
+                rs.close();
+                db.close();
 
                 message = "<b>\n" + message + "\n</b>\n";
                 request.setAttribute("Message", message);

@@ -50,7 +50,8 @@ public class LogOut extends HttpServlet {
                 st.executeUpdate(sql);
 
                 message = "Все сессии успешно закрыты!\n<br>\n";
-
+                st.close();
+                db.close();
 
             } catch (SQLException e) {
                 message += e.toString();
@@ -58,6 +59,7 @@ public class LogOut extends HttpServlet {
         }
 
 
+        message = "<b>\n" + message + "\n</b>\n";
         request.setAttribute("Message", message);
         getServletContext().getRequestDispatcher("/index.jsp").forward(
                 request, response);

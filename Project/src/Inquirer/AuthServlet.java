@@ -41,6 +41,7 @@ public class AuthServlet extends HttpServlet {
 
         // Сообщение о результате атентификации
         String message = "";
+        Boolean mailbool = false;
         boolean AuthBool = false;
         String JspRedirect = "/index.jsp";
         int user_id = 0;
@@ -64,6 +65,7 @@ public class AuthServlet extends HttpServlet {
             System.out.println("Auth  -DB-  Connection success!");
             Statement st;
             st = db.createStatement();
+
 
             //Проверка на наличие Логина в БД
             String sql = "SELECT user_id FROM users WHERE user_name ILIKE '" + UserName + "' AND user_pwd = '" + UserPWD + "'";
@@ -90,6 +92,7 @@ public class AuthServlet extends HttpServlet {
                 rs.next();
                 int session_ID = rs.getInt(1);
 
+
                 // Запись куки с ключом и индетификатором сессии
                 Cookie c_key = new Cookie("SessionKey", session_Key.toString());
                 c_key.setMaxAge(72 * 60 * 60);
@@ -99,8 +102,6 @@ public class AuthServlet extends HttpServlet {
                 response.addCookie(c_id);
 
 
-                // Запись сообщения об удачной атентификации
-                message += "Успешная авторизация!\n<br>\n";
                 AuthBool = true;
 
 
@@ -133,6 +134,37 @@ public class AuthServlet extends HttpServlet {
                     if (rs.getString(1).equals("ADMINS"))
                         JspRedirect = "/adminpage.jsp";
                 }
+
+                sql = "SELECT group_title FROM groups WHERE group_id IN " +
+                        "(SELECT group_id FROM group_entries WHERE user_id='" + user_id + "')";
+                rs = st.executeQuery(sql);
+                while (rs.next()) {
+                    if (rs.getString(1).equals("Mail_OK"))
+                        mailbool = true;
+                }
+                if (!mailbool) {
+
+                    sql = "SELECT user_email FROM users WHERE user_id ='" + user_id + "'";
+                    rs = st.executeQuery(sql);
+                    rs.next();
+                    String UserEmail = rs.getString(1);
+
+                    message += "<br>\n<br>\n<font color=\"#CC0000\">Ваша учутная запись не подтверждена!</font>\n<br>\n";
+
+                    message += "<center>" +
+                            "<form action=\"" + getServletContext().getContextPath() + "/sender\" method=\"post\" name=\"send\">\n" +
+                            " <input type=\"hidden\" name=\"UserEmail\" value=\"" + UserEmail + "\">\n" +
+                            " <input type=\"hidden\" name=\"JspRedirect\" value=\"" + JspRedirect + "\">\n" +
+                            " <input type=\"hidden\" name=\"UserName\" value=\"" + UserName + "\">\n" +
+                            "<button type=\"submit\">Повторно отправить письмо<br>\n" +
+                            "для подтверждения регистрации</button>\n" +
+                            "</form>" +
+                            "</center>";
+                }
+
+//                message += "<br>\n<br>\n <font color=\"#CC0000\">Регистрация провалилась!</font>\n<br>\n";
+//                message = "<b>\n" + message + "\n</b>\n";
+                
             }
 
             // Закрываем соеденение с базой данных
@@ -146,6 +178,7 @@ public class AuthServlet extends HttpServlet {
 
         // Окрываем страницу index.jsp
         // и передаём ей сообщение о результатах аутентифакации.
+        message = "<b>\n" + message + "\n</b>\n";
         request.setAttribute("Message", message);
         request.setAttribute("Nickname", UserName);
         getServletContext().getRequestDispatcher(JspRedirect).forward(
