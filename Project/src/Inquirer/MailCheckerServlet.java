@@ -20,14 +20,6 @@ public class MailCheckerServlet extends HttpServlet {
                          javax.servlet.http.HttpServletResponse response)
             throws javax.servlet.ServletException, IOException {
 
-        // Подключаем драйвер базы данных.
-        try {
-            Class.forName("org.postgresql.Driver");
-            System.out.println("Driver loading success!");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
 
         // Ищем наш куки.
         String CookieString = null;
@@ -38,11 +30,11 @@ public class MailCheckerServlet extends HttpServlet {
             }
         }
         // Получаем от клиента строку и хэшируем её.
-        String ClientString = request.getParameter("ClientStr");
-        System.out.println(ClientString);
+        String MailChekStr = request.getParameter("ClientStr");
+        System.out.println("MailChecker  -Get String- " + MailChekStr);
         String HASHClientString = "";
         try {
-            HASHClientString = UtilHash.getHash(ClientString);  // TODO солить
+            HASHClientString = UtilHash.getHash(MailChekStr);  // TODO солить
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -54,15 +46,21 @@ public class MailCheckerServlet extends HttpServlet {
             if (HASHClientString.equals(CookieString)) {
                 Result = "Адрес " + RegServlet.NewUserEmail + " подтверждён!<br>\n";
 
+
+                // Подключаем драйвер базы данных.
+                try {
+                    Class.forName("org.postgresql.Driver");
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
                 // Параметры подключения базы данных.
                 String dbusername = "postgres";
                 String dbpwd = "123";
                 String dburl = "jdbc:postgresql://localhost:5432/poll";
-
                 // Подключаем базу данных.
                 try {
                     Connection db = DriverManager.getConnection(dburl, dbusername, dbpwd);
-                    System.out.println("Connection success!");
+                    System.out.println("MailChecker  -DB-  Connection success!");
                     Statement st = db.createStatement();
 
                     // Добавляем пользоваетля в группу
