@@ -51,7 +51,7 @@ public class UtilMail extends HttpServlet {
         }
 
         String subject = "Подтверждение регистрации.";
-        String content = "http://localhost:8080/MailCheckerServlet?ClientStr=" + Xstring; //request.getRequestURL().toString(); TODO подсунуть динамически.
+        String content = "http://37.203.8.146:8080/MailCheckerServlet?ClientStr=" + Xstring; //request.getRequestURL().toString(); TODO подсунуть динамически.
 
         // Запись куки в браузер клиенту.
         try {

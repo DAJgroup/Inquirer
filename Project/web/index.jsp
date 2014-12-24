@@ -149,10 +149,6 @@
                 <br>
                 <li><a id="popup_3" href="#">Забыли пароль?</a></li>
             </ul>
-            <a href="adminpage.html">ADMIN</a>
-            <br/><br/><br/>
-            <a href="userpage.html">USER</a>
-
         </aside>
 
         <section>

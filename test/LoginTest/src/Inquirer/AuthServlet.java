@@ -103,12 +103,11 @@ public class AuthServlet extends HttpServlet {
 
 
                     // Запись сообщения об удачной атентификации
-                    LoginMessage += "Успешная авторизация\n<br>\n" +
-                            "Куки установленны\n<br>\n<br>\n<br>\n";
+                    LoginMessage += "Успешная авторизация!\n<br>\n<br>\n<br>\n<br>\n";
 
 
                     // Пулучам список групп пользоваетля и добавляем его к сообщению
-                    LoginMessage += UserLogin + " из групп(ы) : <br>\n";
+                    LoginMessage += UserLogin + " состоит в группах:<br>\n<br>\n";
                     sql = "SELECT group_title FROM groups WHERE group_id IN " +
                             "(SELECT group_id FROM group_entries WHERE user_id='" + user_id + "')";
                     rs = st.executeQuery(sql);
@@ -128,7 +127,7 @@ public class AuthServlet extends HttpServlet {
 
             } else {
                 // Сообщение о неудачной утентификации
-                LoginMessage += "Логин не найден\n<br>\n";
+                LoginMessage += "Логин не найден!\n<br>\n";
             }
             // Закрываем соеденение с базой данных
             rs.close();
