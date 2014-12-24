@@ -120,8 +120,8 @@ public class AuthServlet extends HttpServlet {
 
 
             } else {
-                // Сообщение о неудачной утентификации
-                message += "Неверый логин и/или пароль!\n<br>\n";
+                // Сообщение о неудачной аутентификации
+                message += "Неверный логин и/или пароль!\n<br>\n";
             }
 
 
@@ -149,7 +149,7 @@ public class AuthServlet extends HttpServlet {
                     rs.next();
                     String UserEmail = rs.getString(1);
 
-                    message += "<br>\n<br>\n<font color=\"#CC0000\">Ваша учутная запись не подтверждена!</font>\n<br>\n";
+                    message += "<br>\n<font color=\"#CC0000\">Ваша учетная запись не подтверждена!</font><br>\n";
 
                     message += "<center>" +
                             "<form action=\"" + getServletContext().getContextPath() + "/sender\" method=\"post\" name=\"send\">\n" +
@@ -175,10 +175,9 @@ public class AuthServlet extends HttpServlet {
             e.printStackTrace();
         }
 
-
         // Окрываем страницу index.jsp
         // и передаём ей сообщение о результатах аутентифакации.
-        message = "<b>\n" + message + "\n</b>\n";
+        message = "\n<b>" + message + "</b>\n";
         request.setAttribute("Message", message);
         request.setAttribute("Nickname", UserName);
         getServletContext().getRequestDispatcher(JspRedirect).forward(

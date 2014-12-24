@@ -20,7 +20,6 @@ public class LogOut extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
 
-
         String message = "";
 
         String SessionID = null;
@@ -59,12 +58,10 @@ public class LogOut extends HttpServlet {
         }
 
 
-        message = "<b>\n" + message + "\n</b>\n";
+        message = "\n<b>" + message + "</b>\n";
         request.setAttribute("Message", message);
         getServletContext().getRequestDispatcher("/index.jsp").forward(
                 request, response);
     }
 
 }
-
-

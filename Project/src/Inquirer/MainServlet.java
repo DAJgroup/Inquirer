@@ -97,7 +97,7 @@ public class MainServlet extends HttpServlet {
                         rs.next();
                         String UserEmail = rs.getString(1);
 
-                        message += "<br>\n<br>\n<font color=\"#CC0000\">Ваша учутная запись не подтверждена!</font>\n<br>\n";
+                        message += "\n<br><font color=\"#CC0000\">Ваша учетная запись не подтверждена!</font><br>\n";
 
                         message += "<center>" +
                                 "<form action=\"" + getServletContext().getContextPath() + "/sender\" method=\"post\" name=\"send\">\n" +
@@ -127,7 +127,7 @@ public class MainServlet extends HttpServlet {
         }
 
 
-        message = "<b>\n" + message + "\n</b>\n";
+        message = "\n<b>" + message + "</b>\n";
         request.setAttribute("Message", message);
         request.setAttribute("Nickname", UserLogin);
         getServletContext().getRequestDispatcher(JspRedirect).forward(
