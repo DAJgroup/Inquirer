@@ -78,49 +78,61 @@ public class RegServlet extends HttpServlet {
 // имя и фамилия /^[a-zA-Zа-яА-ЯёЁ_ -`'][^0-9]+$/gi
         Pattern p;
         Matcher m, m2;
+
+
         p = Pattern.compile("^[a-zA-Z0-9_ +-`'*]+$");
         m = p.matcher(NewUserName);
-        if (NewUserName.length() >= 5 && !m.matches()) {
+        if (NewUserName.length() < 5 || !m.matches()) {
             error = true;
-            message += "Значение \"Логин\" некорректно!\n<br>\n";
+            message += "Логин указан некорректно!\n<br>\n";
         }
-        System.out.println("REG NewUserName       --  \"" + NewUserName + "\" - " + (NewUserName.length() >= 5 && m.matches()));
+        System.out.println("REG NewUserName       --  \"" + NewUserName + "\" - " + (NewUserName.length() < 5 && m.matches()));
+        System.out.println(NewUserName.length());
+
 
         p = Pattern.compile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
         m = p.matcher(NewUserEmail);
         if (!m.matches()) {
             error = true;
-            message += "\nЗначение \"E-mail\" некорректно!";
+            message += "E-mail указан некорректно!\n<br>\n";
         }
         System.out.println("REG NewUserEmail      --  \"" + NewUserEmail + "\" - " + m.matches());
+
 
         p = Pattern.compile("^[a-zA-Z0-9_ +-`'*]+$");
         m = p.matcher(NewUserPWD);
         m2 = p.matcher(NewUserREPWD);
-        if ((NewUserPWD.length() >= 6 && !m.matches()) && (NewUserREPWD.length() >= 6 && !m2.matches())) {
+        if ((NewUserPWD.length() < 6 || !m.matches()) || (NewUserREPWD.length() < 6 || !m2.matches())) {
             error = true;
             message += "Пароль указан некорректно!\n<br>\n";
-        } else if (!NewUserPWD.equals(NewUserREPWD)) {
-            error = true;
-            message += "При подтверждении пароля допущена ошибка!";
         }
+
+
+        if (!NewUserPWD.equals(NewUserREPWD)) {
+            error = true;
+            message += "При подтверждении пароля допущена ошибка!\n<br>\n";
+        } 
+        
         System.out.println("REG NewUserPWD        --  \"" + NewUserPWD + "\" - " + m.matches());
         System.out.println("REG NewUserREPWD      --  \"" + NewUserREPWD + "\" - " + m2.matches());
 
+
         p = Pattern.compile("^[a-zA-Zа-яА-ЯёЁ_ -`'][^0-9]+$");
         m = p.matcher(NewUserFirstName);
-        if (NewUserFirstName.length() >= 6 && !m.matches()) {
+        if (NewUserFirstName.length() < 2 || !m.matches()) {
             error = true;
             message += "Имя указано некорректно!\n<br>\n";
         }
         System.out.println("REG NewUserFirstName  --  \"" + NewUserFirstName + "\" - " + m.matches());
 
+
         m = p.matcher(NewUserLastName);
-        if (NewUserLastName.length() >= 6 && !m.matches()) {
+        if (NewUserLastName.length() < 2 || !m.matches()) {
             error = true;
             message += "Фамилия указана некорректно!\n<br>\n";
         }
         System.out.println("REG NewUserLastName   --  \"" + NewUserLastName + "\" - " + m.matches());
+        message = "<b>\n" + message + "\n</b>\n";
 
 
         if (!error) {
@@ -158,6 +170,9 @@ public class RegServlet extends HttpServlet {
                     Cookie c1 = new Cookie("MailCheck", HasXstring);
                     c1.setMaxAge(60 * 60);
                     response.addCookie(c1);
+                    Cookie c2 = new Cookie("MailAddr", NewUserEmail);
+                    c2.setMaxAge(60 * 60);
+                    response.addCookie(c2);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -271,7 +286,8 @@ public class RegServlet extends HttpServlet {
 
 
         if (error) {  //if (!NewUserEmail.equals("")&&!NewUserName.equals("")&&!NewUserPWD.equals("")){
-            message += "<br>\n<br>\n Регистрация провалилась!\n<br>\n";
+            message += "<br>\n<br>\n <font color=\"#CC0000\">Регистрация провалилась!</font>\n<br>\n";
+            message = "<b>\n" + message + "\n</b>\n";
 
             request.setAttribute("Message", message);
             getServletContext().getRequestDispatcher("/index.jsp").forward(
@@ -337,6 +353,7 @@ public class RegServlet extends HttpServlet {
                         JspRedirect = "/adminpage.jsp";
                 }
 
+                message = "<b>\n" + message + "\n</b>\n";
                 request.setAttribute("Message", message);
                 request.setAttribute("Nickname", NewUserName);
                 getServletContext().getRequestDispatcher(JspRedirect).forward(

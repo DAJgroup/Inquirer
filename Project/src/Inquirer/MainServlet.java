@@ -17,8 +17,7 @@ public class MainServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        boolean AuthBool = false;
-        String JspRedirect;
+        String JspRedirect = "/index.jsp";
 
         String RemoteIP = getIP.getRemoteIP(request);
         String message = "";
@@ -70,13 +69,24 @@ public class MainServlet extends HttpServlet {
                     rs = st.executeQuery(sql);
                     rs.next();
                     message += "Последний визит: \n<br>\n" + rs.getString(1) + "\n<br>\n" + rs.getString(2);
-                    AuthBool = true;
 
                     sql = "UPDATE user_sessions SET last_entry=NOW() WHERE session_id='" + SessionID + "'";
                     st.executeUpdate(sql);
+
+
+                    JspRedirect = "/userpage.jsp";
+                    sql = "SELECT group_title FROM groups WHERE group_id IN " +
+                            "(SELECT group_id FROM group_entries WHERE user_id='" + UserID + "')";
+                    rs = st.executeQuery(sql);
+                    while (rs.next()) {
+                        if (rs.getString(1).equals("ADMINS"))
+                            JspRedirect = "/adminpage.jsp";
+                    }
+
                 } else {
                     message = "";
                 }
+
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -85,11 +95,6 @@ public class MainServlet extends HttpServlet {
             message = "";
         }
 
-        if (AuthBool) {
-            JspRedirect = "/authorizeduser.jsp";
-        } else {
-            JspRedirect = "/index.jsp";
-        }
 
         request.setAttribute("Message", message);
         request.setAttribute("Nickname", UserLogin);
