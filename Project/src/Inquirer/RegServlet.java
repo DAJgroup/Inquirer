@@ -328,9 +328,18 @@ public class RegServlet extends HttpServlet {
                 c_id.setMaxAge(72 * 60 * 60);
                 response.addCookie(c_id);
 
+                String JspRedirect = "/userpage.jsp";
+                sql = "SELECT group_title FROM groups WHERE group_id IN " +
+                        "(SELECT group_id FROM group_entries WHERE user_id='" + user_id + "')";
+                rs = st.executeQuery(sql);
+                while (rs.next()) {
+                    if (rs.getString(1).equals("ADMINS"))
+                        JspRedirect = "/adminpage.jsp";
+                }
+
                 request.setAttribute("Message", message);
                 request.setAttribute("Nickname", NewUserName);
-                getServletContext().getRequestDispatcher("/authorizeduser.jsp").forward(
+                getServletContext().getRequestDispatcher(JspRedirect).forward(
                         request, response);
 
             } catch (SQLException e) {

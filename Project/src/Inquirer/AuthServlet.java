@@ -103,18 +103,18 @@ public class AuthServlet extends HttpServlet {
                 AuthBool = true;
 
 
-                // Пулучаем список групп пользоваетля и добавляем его к сообщению
-                LoginMessage += UserName + " из групп(ы) : <br>\n";
-                sql = "SELECT group_title FROM groups WHERE group_id IN " +
-                        "(SELECT group_id FROM group_entries WHERE user_id='" + user_id + "')";
-                rs = st.executeQuery(sql);
-                while (rs.next()) {
-                    LoginMessage += rs.getString(1) + "<br>\n";
-                }
-
-
-                // Добавляем к сообщению IP-адрес клиента
-                LoginMessage += "\n<br>\nclient_ip = " + RemoteIP;
+//                // Пулучаем список групп пользоваетля и добавляем его к сообщению
+//                LoginMessage += UserName + " из групп(ы) : <br>\n";
+//                sql = "SELECT group_title FROM groups WHERE group_id IN " +
+//                        "(SELECT group_id FROM group_entries WHERE user_id='" + user_id + "')";
+//                rs = st.executeQuery(sql);
+//                while (rs.next()) {
+//                    LoginMessage += rs.getString(1) + "<br>\n";
+//                }
+//
+//
+//                // Добавляем к сообщению IP-адрес клиента
+//                LoginMessage += "\n<br>\nclient_ip = " + RemoteIP;
 
 
             } else {

@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -32,9 +33,10 @@
             <a id="logo" href="#" title="DAJ Group"></a>
             <nav>
                 <ul class="nav-list">
-                    <li id="greeting">Добро пожаловать, <b>Admin</b></li>
+                    <li id="greeting">Добро пожаловать, <b><%=request.getAttribute("Nickname")%>
+                    </b></li>
                     <li><a title="Мой кабинет" href="#">Мой кабинет</a></li>
-                    <li><a title="Выход" href="#" id="exit">Выход</a></li>
+                    <li><a title="Выход" href="${pageContext.request.contextPath}/LogOut" id="exit">Выход</a></li>
                     <li><a title="О проекте" href="#">О проекте</a></li>
                     <li><a title="FAQ" href="#">FAQ</a></li>
                 </ul>
@@ -151,25 +153,9 @@
             <ul id="aside_menu">
                 <li class="first_level"><a class="arrowopen" href="#"><p>Опросники <span>#</span></p></a>
                     <ul class="expand">
-                        <li class="second_level"><a class="arrowopen" href="#"><p>Мои</p></a>
-                            <ul class="expand">
-                                <li class="last_level"><p>Новые <span>#</span></p></li>
-                                <li class="last_level"><p>Пройденные <span>#</span></p></li>
-                                <li class="last_level"><p>Начатые <span>#</span></p></li>
-                            </ul>
-                        </li>
-                        <li class="second_level"><a class="arrowopen" href="#"><p>Создание</p></a>
-                            <ul class="expand">
-                                <li class="last_level"><p>Неопубликованные</p></li>
-                                <li class="last_level"><p>Создать новый</p></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li class="first_level"><a class="arrowopen" href="#"><p>Все пользователи</p></a>
-                    <ul class="expand">
-                        <li class="second_level"><p>Пользователи <span>#</span></p></li>
-                        <li class="second_level"><p>Администраторы <span>#</span></p></li>
+                        <li class="last_level"><p>Новые <span>#</span></p></li>
+                        <li class="last_level"><p>Пройденные <span>#</span></p></li>
+                        <li class="last_level"><p>Начатые <span>#</span></p></li>
                     </ul>
                 </li>
             </ul>
@@ -184,8 +170,11 @@
                 </form>
             </article>
         </section>
-
-
+        <div style="text-align: center;">
+            <h2><%=request.getAttribute("Message")%>
+            </h2>
+            <br/>
+        </div>
     </div>
     <!-- END of content -->
 </div>
