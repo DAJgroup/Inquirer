@@ -1,30 +1,29 @@
-
 /*
 -- !!!  Отдельный скрипт для создания БД.  !!!
--- (В многокомандном скрипте запрещено создавать БД.)  
-
- 
+-- (В многокомандном скрипте запрещено создавать БД.)
 -- Database: poll
-
 CREATE DATABASE poll
   WITH ENCODING='UTF8'
        OWNER=postgres
        LC_COLLATE='ru_RU.UTF-8'  -- Для Windows: ='Russian_Russia.1251' 
        LC_CTYPE='ru_RU.UTF-8'    -- Для UNIX:    ='ru_RU.UTF-8'         
        CONNECTION LIMIT=-1;
-
-
 -- !!!  Отдельный скрипт для создания БД.  !!!
 */
 
--- Table: users
 
+
+
+
+-- Table: users
 CREATE TABLE users
 (
    user_id serial NOT NULL PRIMARY KEY, 
    user_name character varying(32) NOT NULL UNIQUE, 
    user_email character varying(32) NOT NULL UNIQUE, 
-   user_pwd character varying(64) NOT NULL, 
+   user_pwd character varying(64) NOT NULL,
+  user_firstname CHARACTER VARYING(32) NOT NULL,
+  user_lastname  CHARACTER VARYING(32) NOT NULL,
    user_create_date timestamp without time zone NOT NULL DEFAULT now()
 ) 
 WITH (
@@ -32,8 +31,6 @@ WITH (
 )
 ;
 ALTER TABLE users OWNER TO postgres;
-
-
 
 -- Table: groups
 
@@ -52,10 +49,7 @@ WITH (
 ;
 ALTER TABLE groups OWNER TO postgres;
 
-
-
 -- Table: group_entries
-
 CREATE TABLE group_entries
 (
   user_id integer NOT NULL REFERENCES users (user_id),
@@ -70,10 +64,7 @@ WITH (
 ;
 ALTER TABLE group_entries OWNER TO postgres;
 
-
-
 -- Table: user_sessions
-
 CREATE TABLE user_sessions
 (
    user_id integer NOT NULL REFERENCES users (user_id), 
@@ -88,5 +79,113 @@ WITH (
 )
 ;
 ALTER TABLE user_sessions OWNER TO postgres;
+
+
+/*============================================*/
+
+-- Table: poll
+
+-- DROP TABLE poll;
+
+CREATE TABLE poll
+(
+  poll_id      SERIAL                      NOT NULL,
+  poll_title   CHARACTER VARYING(64)       NOT NULL,
+  description  CHARACTER VARYING(255),
+  poll_status  BOOLEAN,
+  entry_date   TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
+  entry_author INTEGER                     NOT NULL,
+  CONSTRAINT poll_pkey PRIMARY KEY (poll_id),
+  CONSTRAINT poll_entry_author_fkey FOREIGN KEY (entry_author)
+  REFERENCES users (user_id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE RESTRICT
+)
+WITH (
+OIDS =FALSE
+);
+ALTER TABLE poll
+OWNER TO postgres;
+
+/*=========================================*/
+
+-- Table: users_poll
+
+-- DROP TABLE users_poll;
+
+CREATE TABLE users_poll
+(
+  user_id    INTEGER                     NOT NULL,
+  poll_id    INTEGER                     NOT NULL,
+  entry_date TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
+  CONSTRAINT users_poll_pkey PRIMARY KEY (user_id, poll_id),
+  CONSTRAINT users_poll_user_id_fkey FOREIGN KEY (user_id)
+  REFERENCES users (user_id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE RESTRICT,
+  CONSTRAINT users_poll_poll_id_fkey FOREIGN KEY (poll_id)
+  REFERENCES poll (poll_id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE RESTRICT
+)
+WITH (
+OIDS =FALSE
+);
+ALTER TABLE users_poll
+OWNER TO postgres;
+
+/*=========================================*/
+
+-- Table: question
+
+-- DROP TABLE question;
+
+CREATE TABLE question
+(
+  qu_id        SERIAL                      NOT NULL,
+  qu_text      CHARACTER VARYING(255)      NOT NULL,
+  poll_id      INTEGER                     NOT NULL,
+  entry_date   TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
+  entry_author INTEGER                     NOT NULL,
+  CONSTRAINT qu_id_pkey PRIMARY KEY (qu_id),
+  CONSTRAINT qu_id_entry_author_fkey FOREIGN KEY (entry_author)
+  REFERENCES users (user_id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE RESTRICT,
+  CONSTRAINT qu_id_poll_id_fkey FOREIGN KEY (poll_id)
+  REFERENCES poll (poll_id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE RESTRICT
+)
+WITH (
+OIDS =FALSE
+);
+ALTER TABLE question
+OWNER TO postgres;
+
+/*=========================================*/
+
+-- Table: answer
+
+-- DROP TABLE answer;
+
+CREATE TABLE answer
+(
+  answer_id    SERIAL                      NOT NULL,
+  answer_text  CHARACTER VARYING(255)      NOT NULL,
+  qu_id        INTEGER                     NOT NULL,
+  is_true      BOOLEAN,
+  entry_date   TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT now(),
+  entry_author INTEGER                     NOT NULL,
+  CONSTRAINT answer_id_pkey PRIMARY KEY (answer_id),
+  CONSTRAINT answer_id_entry_author_fkey FOREIGN KEY (entry_author)
+  REFERENCES users (user_id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE RESTRICT,
+  CONSTRAINT answer_id_qu_id_fkey FOREIGN KEY (qu_id)
+  REFERENCES question (qu_id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE RESTRICT
+)
+WITH (
+OIDS =FALSE
+);
+ALTER TABLE answer
+OWNER TO postgres;
+
+/*=========================================*/
 
 

@@ -6,7 +6,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import java.io.IOException;
-import java.net.URL;
 import java.sql.*;
 
 @WebServlet(name = "MainServlet", urlPatterns = "")
@@ -18,30 +17,8 @@ public class MainServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        URL path = this.getClass().getClassLoader().getResource("");
-        System.out.println(path);
-
-        String rootPath = getServletContext().getRealPath("/");
-        System.out.println(rootPath);
-
-        String PPPATH = getServletContext().getContextPath();
-        System.out.println("PPPP  ===  " + PPPATH);
-
         boolean AuthBool = false;
         String JspRedirect;
-
-        // Подключаем драйвер базы данных.
-        try {
-            Class.forName("org.postgresql.Driver");
-            System.out.println("Driver loading success!");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        // Параметры подключения базы данных
-        String dbusername = "postgres";
-        String dbpwd = "123";
-        String dburl = "jdbc:postgresql://localhost:5432/poll";
 
         String RemoteIP = getIP.getRemoteIP(request);
         String message = "";
@@ -62,10 +39,21 @@ public class MainServlet extends HttpServlet {
 
         if (SessionID != null && SessionKey != null) {
 
+            // Подключаем драйвер базы данных.
+            try {
+                Class.forName("org.postgresql.Driver");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            // Параметры подключения базы данных
+            String dbusername = "postgres";
+            String dbpwd = "123";
+            String dburl = "jdbc:postgresql://localhost:5432/poll";
             // Подключаем базу данных
             Connection db;
             try {
                 db = DriverManager.getConnection(dburl, dbusername, dbpwd);
+                System.out.println("Main  -DB-  Connection success!");
                 Statement st = db.createStatement();
                 ResultSet rs;
                 String sql = "SELECT user_id FROM user_sessions WHERE session_key='" + SessionKey + "' " +

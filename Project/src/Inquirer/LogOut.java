@@ -19,9 +19,6 @@ public class LogOut extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        String dbusername = "postgres";
-        String dbpwd = "123";
-        String dburl = "jdbc:postgresql://localhost:5432/poll";
 
 
         String message = "";
@@ -39,15 +36,15 @@ public class LogOut extends HttpServlet {
             // Подключаем драйвер и базы.
             try {
                 Class.forName("org.postgresql.Driver");
-                System.out.println("Driver loading success!");
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
-
-
+            String dbusername = "postgres";
+            String dbpwd = "123";
+            String dburl = "jdbc:postgresql://localhost:5432/poll";
             try {
                 Connection db = DriverManager.getConnection(dburl, dbusername, dbpwd);
-                System.out.println("Database connection  ==>  OK!");
+                System.out.println("LogOut  -DB-  Connection success!");
                 Statement st = db.createStatement();
                 String sql = "DELETE FROM user_sessions WHERE user_id =(Select user_id FROM user_sessions WHERE session_id ='" + SessionID + "')";
                 st.executeUpdate(sql);
