@@ -81,11 +81,11 @@
                     <label for="firstname">Имя:
                         <small>just letters</small>
                     </label>
-                    <input type="text" id="firstname" name="firstname">
+                    <input type="text" id="firstname" name="NewUserFirstName">
                     <label for="lastname">Фамилия:
                         <small>just letters</small>
                     </label>
-                    <input type="text" id="lastname" name="lastname">
+                    <input type="text" id="lastname" name="NewUserLastName">
                     <!--<input class="sendform" type="submit" value="Зарегистрироваться">-->
                     <button class="sendform" type="submit">Зарегистрироваться</button>
                 </form>
@@ -149,10 +149,6 @@
                 <br>
                 <li><a id="popup_3" href="#">Забыли пароль?</a></li>
             </ul>
-            <a href="adminpage.html">ADMIN</a>
-            <br/><br/><br/>
-            <a href="userpage.html">USER</a>
-
         </aside>
 
         <section>

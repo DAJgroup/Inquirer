@@ -6,7 +6,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import java.io.IOException;
-import java.net.URL;
 import java.sql.*;
 
 @WebServlet(name = "MainServlet", urlPatterns = "")
@@ -18,30 +17,7 @@ public class MainServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        URL path = this.getClass().getClassLoader().getResource("");
-        System.out.println(path);
-
-        String rootPath = getServletContext().getRealPath("/");
-        System.out.println(rootPath);
-
-        String PPPATH = getServletContext().getContextPath();
-        System.out.println("PPPP  ===  " + PPPATH);
-
-        boolean AuthBool = false;
-        String JspRedirect;
-
-        // Подключаем драйвер базы данных.
-        try {
-            Class.forName("org.postgresql.Driver");
-            System.out.println("Driver loading success!");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        // Параметры подключения базы данных
-        String dbusername = "postgres";
-        String dbpwd = "123";
-        String dburl = "jdbc:postgresql://localhost:5432/poll";
+        String JspRedirect = "/index.jsp";
 
         String RemoteIP = getIP.getRemoteIP(request);
         String message = "";
@@ -62,10 +38,21 @@ public class MainServlet extends HttpServlet {
 
         if (SessionID != null && SessionKey != null) {
 
+            // Подключаем драйвер базы данных.
+            try {
+                Class.forName("org.postgresql.Driver");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            // Параметры подключения базы данных
+            String dbusername = "postgres";
+            String dbpwd = "123";
+            String dburl = "jdbc:postgresql://localhost:5432/poll";
             // Подключаем базу данных
             Connection db;
             try {
                 db = DriverManager.getConnection(dburl, dbusername, dbpwd);
+                System.out.println("Main  -DB-  Connection success!");
                 Statement st = db.createStatement();
                 ResultSet rs;
                 String sql = "SELECT user_id FROM user_sessions WHERE session_key='" + SessionKey + "' " +
@@ -81,14 +68,56 @@ public class MainServlet extends HttpServlet {
                     sql = "SELECT last_entry, session_ip FROM user_sessions WHERE session_id='" + SessionID + "'";
                     rs = st.executeQuery(sql);
                     rs.next();
-                    message += "Последний визит: \n<br>\n" + rs.getString(1) + "\n<br>\n" + rs.getString(2);
-                    AuthBool = true;
 
                     sql = "UPDATE user_sessions SET last_entry=NOW() WHERE session_id='" + SessionID + "'";
                     st.executeUpdate(sql);
+
+
+                    JspRedirect = "/userpage.jsp";
+                    sql = "SELECT group_title FROM groups WHERE group_id IN " +
+                            "(SELECT group_id FROM group_entries WHERE user_id='" + UserID + "')";
+                    rs = st.executeQuery(sql);
+                    while (rs.next()) {
+                        if (rs.getString(1).equals("ADMINS"))
+                            JspRedirect = "/adminpage.jsp";
+                    }
+
+                    boolean mailbool = false;
+                    sql = "SELECT group_title FROM groups WHERE group_id IN " +
+                            "(SELECT group_id FROM group_entries WHERE user_id='" + UserID + "')";
+                    rs = st.executeQuery(sql);
+                    while (rs.next()) {
+                        if (rs.getString(1).equals("Mail_OK"))
+                            mailbool = true;
+                    }
+                    if (!mailbool) {
+
+                        sql = "SELECT user_email FROM users WHERE user_id ='" + UserID + "'";
+                        rs = st.executeQuery(sql);
+                        rs.next();
+                        String UserEmail = rs.getString(1);
+
+                        message += "<br>\n<br>\n<font color=\"#CC0000\">Ваша учутная запись не подтверждена!</font>\n<br>\n";
+
+                        message += "<center>" +
+                                "<form action=\"" + getServletContext().getContextPath() + "/sender\" method=\"post\" name=\"send\">\n" +
+                                " <input type=\"hidden\" name=\"UserEmail\" value=\"" + UserEmail + "\">\n" +
+                                " <input type=\"hidden\" name=\"JspRedirect\" value=\"" + JspRedirect + "\">\n" +
+                                " <input type=\"hidden\" name=\"UserName\" value=\"" + UserLogin + "\">\n" +
+                                "<button type=\"submit\">Повторно отправить письмо<br>\n" +
+                                "для подтверждения регистрации</button>\n" +
+                                "</form>" +
+                                "</center>";
+                    }
+
+                    st.close();
+                    rs.close();
+                    db.close();
+
                 } else {
                     message = "";
                 }
+
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -97,12 +126,8 @@ public class MainServlet extends HttpServlet {
             message = "";
         }
 
-        if (AuthBool) {
-            JspRedirect = "/authorizeduser.jsp";
-        } else {
-            JspRedirect = "/index.jsp";
-        }
 
+        message = "<b>\n" + message + "\n</b>\n";
         request.setAttribute("Message", message);
         request.setAttribute("Nickname", UserLogin);
         getServletContext().getRequestDispatcher(JspRedirect).forward(
