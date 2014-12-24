@@ -77,8 +77,8 @@ public class RegServlet extends HttpServlet {
 // е-маил и  рее-маил /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi
 // имя и фамилия /^[a-zA-Zа-яА-ЯёЁ_ -`'][^0-9]+$/gi
         Pattern p;
-        Matcher m;
-        p = Pattern.compile("^[a-zA-Z0-9_-]+$");
+        Matcher m, m2;
+        p = Pattern.compile("^[a-zA-Z0-9_ +-`'*]+$");
         m = p.matcher(NewUserName);
         if (NewUserName.length() >= 5 && !m.matches()) {
             error = true;
@@ -96,38 +96,31 @@ public class RegServlet extends HttpServlet {
 
         p = Pattern.compile("^[a-zA-Z0-9_ +-`'*]+$");
         m = p.matcher(NewUserPWD);
-        if (NewUserPWD.length() >= 6 && !m.matches()) {
+        m2 = p.matcher(NewUserREPWD);
+        if ((NewUserPWD.length() >= 6 && !m.matches()) && (NewUserREPWD.length() >= 6 && !m2.matches())) {
             error = true;
-            message += "Значение \"Пароль:1\" некорректно!\n<br>\n";
+            message += "Пароль указан некорректно!\n<br>\n";
+        } else if (!NewUserPWD.equals(NewUserREPWD)) {
+            error = true;
+            message += "При подтверждении пароля допущена ошибка!";
         }
         System.out.println("REG NewUserPWD        --  \"" + NewUserPWD + "\" - " + m.matches());
-
-        m = p.matcher(NewUserREPWD);
-        if (NewUserREPWD.length() >= 6 && !m.matches()) {
-            error = true;
-            message += "Значение \"Пароль:2\" некорректно!\n<br>\n";
-        }
-        System.out.println("REG NewUserREPWD      --  \"" + NewUserREPWD + "\" - " + m.matches());
+        System.out.println("REG NewUserREPWD      --  \"" + NewUserREPWD + "\" - " + m2.matches());
 
         p = Pattern.compile("^[a-zA-Zа-яА-ЯёЁ_ -`'][^0-9]+$");
         m = p.matcher(NewUserFirstName);
         if (NewUserFirstName.length() >= 6 && !m.matches()) {
             error = true;
-            message += "Значение \"Имя\" некорректно!\n<br>\n";
+            message += "Имя указано некорректно!\n<br>\n";
         }
         System.out.println("REG NewUserFirstName  --  \"" + NewUserFirstName + "\" - " + m.matches());
 
         m = p.matcher(NewUserLastName);
         if (NewUserLastName.length() >= 6 && !m.matches()) {
             error = true;
-            message += "Значение \"Фамилия\" некорректно!\n<br>\n";
+            message += "Фамилия указана некорректно!\n<br>\n";
         }
         System.out.println("REG NewUserLastName   --  \"" + NewUserLastName + "\" - " + m.matches());
-
-        if (!NewUserPWD.equals(NewUserREPWD)) {
-            error = true;
-            message += "При подтверждении пароля допущена ошибка!";
-        }
 
 
         if (!error) {
@@ -336,6 +329,7 @@ public class RegServlet extends HttpServlet {
                 response.addCookie(c_id);
 
                 request.setAttribute("Message", message);
+                request.setAttribute("Nickname", NewUserName);
                 getServletContext().getRequestDispatcher("/authorizeduser.jsp").forward(
                         request, response);
 
